@@ -24,7 +24,7 @@ namespace E_commerance_System.Forms
 
         private void SetupAdvancedUI()
         {
-            this.Text = "✨ E-Commerce Elite — Discover Premium Products";
+            this.Text = "✨ E-Commerce Speed — Discover Premium Products";
             this.Size = new Size(1280, 800);
             this.BackColor = Color.FromArgb(10, 10, 12);
             this.StartPosition = FormStartPosition.CenterScreen;
@@ -56,7 +56,7 @@ namespace E_commerance_System.Forms
 
             // --- Navigation Bar ---
             var pnlNavBar = new Panel { Dock = DockStyle.Top, Height = 80, BackColor = Color.FromArgb(15, 15, 20), Padding = new Padding(30, 0, 30, 0) };
-            var lblLogo = new Label { Text = "E-COMMERCE ELITE", ForeColor = Color.FromArgb(0, 150, 136), Font = new Font("Outfit", 18F, FontStyle.Bold), AutoSize = true, Location = new Point(30, 22) };
+            var lblLogo = new Label { Text = "E-COMMERCE SPEED", ForeColor = Color.FromArgb(0, 150, 136), Font = new Font("Outfit", 18F, FontStyle.Bold), AutoSize = true, Location = new Point(30, 22) };
             
             var pnlMenu = new FlowLayoutPanel { Dock = DockStyle.Right, Width = 800, FlowDirection = FlowDirection.LeftToRight, Padding = new Padding(0, 20, 0, 0) };
             
@@ -112,7 +112,7 @@ namespace E_commerance_System.Forms
             };
 
             var lblHeroTitle = new Label { 
-                Text = "Upgrade Your Lifestyle\nWith Elite Products", 
+                Text = "Upgrade Your Lifestyle\nWith SPEED Products", 
                 Font = new Font("Segoe UI Semibold", 36F), 
                 ForeColor = Color.White, 
                 TextAlign = ContentAlignment.MiddleCenter,
@@ -157,7 +157,7 @@ namespace E_commerance_System.Forms
             pnlFooter.Height = 120;
             pnlFooter.BackColor = Color.FromArgb(15, 15, 20);
             
-            var lblCopy = new Label { Text = "© 2026 E-Commerce Elite. All rights reserved.", ForeColor = Color.Gray, Location = new Point(50, 50), AutoSize = true };
+            var lblCopy = new Label { Text = "© 2026 E-Commerce speed. All rights reserved.", ForeColor = Color.Gray, Location = new Point(50, 50), AutoSize = true };
             pnlFooter.Controls.Add(lblCopy);
 
             // --- Add sections to scroll container in order ---
@@ -246,7 +246,7 @@ namespace E_commerance_System.Forms
         private void UpdateTickerText()
         {
             // Removed dynamic news fetching - Alert news is now for logged-in users only.
-            lblMarquee.Text = "📢 welcome to E-commerance system delivery          |          Premium Products. Secured Payments.          |          Fast Shipping & Secure Checkout.";
+            lblMarquee.Text = "📢 welcome to speed E-commerance system delivery          |          Premium Products. Secured Payments.          |          Fast Shipping & Secure Checkout.";
         }
 
         private Button CreateNavLink(string text, EventHandler onClick)

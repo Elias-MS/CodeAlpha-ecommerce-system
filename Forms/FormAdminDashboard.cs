@@ -9,6 +9,7 @@ using E_commerance_System.Models;
 using E_commerance_System.Services;
 using System.Collections.Generic;
 using System.Linq;
+using System.IO;
 
 // ============================================================
 // FORM: ADMIN DASHBOARD — Central Admin Control Panel
@@ -28,20 +29,20 @@ namespace E_commerance_System.Forms
         private Button btnPrevProof, btnNextProof;
         private DataGridView dgvInventory, dgvComplaints;
         private Button btnNavDashboard, btnNavProducts, btnNavOrders, btnNavCustomers, btnNavInventory, btnNavReports, btnNavNotifications, btnNavComplaints;
-        private TextBox txtCompSearch, txtCompDetail;
+        private TextBox txtCompSearch, txtCompDetail, txtAdminReply;
         private Label lblNotifBadge;
         private FlowLayoutPanel flpStats;
-        private Label lblDeliveredOrders, lblCancelledOrders, lblActiveUsers;
+        private Label lblDeliveredOrders, lblCancelledOrders, lblActiveUsers, lblPendingComplaints;
         
         // Dynamic Action Components
-        private Button btnAddProduct, btnAddCategory, btnEditProduct, btnToggleProduct, btnRefreshProducts, btnApplyDiscount;
+        private Button btnAddProduct, btnEditProduct, btnDeleteProduct, btnAddCategory, btnToggleProduct, btnRefreshProducts;
         private Button btnUpdateStatus, btnApproveOrder, btnRejectOrder, btnRefreshOrders;
         private Button btnRefreshCustomers, btnAddStock;
         private ComboBox cmbReportPeriod, cmbProdCategory;
         private TextBox txtProdSearch;
         private Button btnRefreshReport, btnExportCSV;
         private TextBox txtAnnounceTitle, txtAnnounceContent;
-        private Button btnPostAnnouncement;
+        private Button btnPostAnnouncement, btnRefreshInv;
 
         public FormAdminDashboard(Admin admin)
         {
@@ -58,13 +59,12 @@ namespace E_commerance_System.Forms
                 this.Close();
         }
 
-
         private Panel pnlMainContent;
 
         private void SetupDashboardUI()
         {
             this.Controls.Clear(); // CRITICAL: Clear designer controls first
-            this.Text = "⚙️ Admin Dashboard Pro — E-Commerce Elite";
+            this.Text = "⚙️ Admin Dashboard  E-Commerce";
             this.Size = new Size(1300, 850);
             this.StartPosition = FormStartPosition.CenterScreen;
             this.BackColor = Color.FromArgb(240, 245, 250);
@@ -76,20 +76,34 @@ namespace E_commerance_System.Forms
             var pnlRow1 = new Panel { Dock = DockStyle.Top, Height = 75, BackColor = Color.Transparent };
             
             var lblBrand = new Label { 
-                Text = "🛒 E-ADMIN PRO", ForeColor = Color.FromArgb(0, 188, 212), 
+                Text = "🛒 ADMIN SPEED  ", ForeColor = Color.FromArgb(0, 188, 212), 
                 Font = new Font("Segoe UI", 16F, FontStyle.Bold),
                 Location = new Point(20, 20), AutoSize = true, BackColor = Color.Transparent
             };
+            
+            var btnLogout = new Button {
+                Text = "🚪 Logout",
+                Location = new Point(1150, 20),
+                Size = new Size(110, 40),
+                BackColor = Color.FromArgb(211, 47, 47),
+                ForeColor = Color.White,
+                FlatStyle = FlatStyle.Flat,
+                Font = new Font("Segoe UI", 10F, FontStyle.Bold),
+                Cursor = Cursors.Hand
+            };
+            btnLogout.FlatAppearance.BorderSize = 0;
+            btnLogout.Click += BtnLogout_Click;
+            
             pnlRow1.Controls.Add(lblBrand);
+            pnlRow1.Controls.Add(btnLogout);
 
-            lblNotifBadge = new Label { Text = "0", ForeColor = Color.White, BackColor = Color.Red, Font = new Font("Segoe UI", 8F, FontStyle.Bold), Size = new Size(18, 18), Location = new Point(110, 5), TextAlign = ContentAlignment.MiddleCenter, Visible = false };
             btnNavDashboard = CreateSidebarButton("📊 Dashboard", 0);
             btnNavProducts = CreateSidebarButton("🏷️ Products", 1);
             btnNavOrders = CreateSidebarButton("📦 Order Mgmt", 2);
             btnNavCustomers = CreateSidebarButton("👥 Customers", 3);
             btnNavInventory = CreateSidebarButton("📦 Inventory", 4);
             btnNavReports = CreateSidebarButton("📈 Reports", 5);
-            btnNavComplaints = CreateSidebarButton("🚩 Alert Center", 6);
+            btnNavComplaints = CreateSidebarButton("📋 User Reports", 6);
             btnNavNotifications = CreateSidebarButton("📢 News Mgmt", 7);
 
             var pnlTopNav = new Panel { Dock = DockStyle.Bottom, Height = 60, BackColor = Color.FromArgb(45, 45, 48) };
@@ -97,9 +111,10 @@ namespace E_commerance_System.Forms
             
             lblNotifBadge = new Label {
                 Text = "0", BackColor = Color.Red, ForeColor = Color.White,
-                Font = new Font("Segoe UI", 7F, FontStyle.Bold),
-                Size = new Size(18, 18), Location = new Point(140, 5),
-                TextAlign = ContentAlignment.MiddleCenter, Visible = false
+                Font = new Font("Segoe UI", 7.5F, FontStyle.Bold),
+                Size = new Size(20, 20), Location = new Point(145, 5),
+                TextAlign = ContentAlignment.MiddleCenter, Visible = false,
+                Enabled = false // Allow clicks to pass through to button
             };
             btnNavComplaints.Controls.Add(lblNotifBadge);
             
@@ -110,34 +125,42 @@ namespace E_commerance_System.Forms
             };
 
             lblAdminWelcome = new Label { 
-                Text = "🛡️ ADMIN CONTROL", 
+                Text = $"🛡️ Welcome, {currentAdmin.FullName}", 
                 ForeColor = Color.White, Font = new Font("Segoe UI Semibold", 13F),
                 Location = new Point(25, 25), AutoSize = true, BackColor = Color.Transparent
             };
 
             btnLogout = new Button { 
-                Text = "Logout", Location = new Point(1100, 20), Size = new Size(100, 38),
+                Text = "Logout", Location = new Point(1160, 20), Size = new Size(80, 38),
                 FlatStyle = FlatStyle.Flat, ForeColor = Color.White, BackColor = Color.FromArgb(198, 40, 40),
                 Font = new Font("Segoe UI", 10F, FontStyle.Bold)
             };
             btnLogout.FlatAppearance.BorderSize = 0;
             btnLogout.Click += BtnLogout_Click;
 
-            cmbCurrency = new ComboBox { Location = new Point(990, 25), Size = new Size(85, 28), DropDownStyle = ComboBoxStyle.DropDownList, Font = new Font("Segoe UI", 10F), FlatStyle = FlatStyle.Flat, BackColor = Color.FromArgb(30, 30, 35), ForeColor = Color.White };
+            cmbCurrency = new ComboBox { Location = new Point(1060, 25), Size = new Size(90, 28), DropDownStyle = ComboBoxStyle.DropDownList, Font = new Font("Segoe UI", 10F), FlatStyle = FlatStyle.Flat, BackColor = Color.FromArgb(30, 30, 35), ForeColor = Color.White };
             CurrencyService.SyncCurrencySelector(cmbCurrency, () => {
                 LoadDashboardStats();
                 LoadAllData();
             });
 
+            var btnAddCurrency = new Button {
+                Text = "➕ Currency", Location = new Point(930, 20), Size = new Size(120, 38),
+                FlatStyle = FlatStyle.Flat, ForeColor = Color.White, BackColor = Color.FromArgb(46, 125, 50),
+                Font = new Font("Segoe UI", 10F, FontStyle.Bold), Cursor = Cursors.Hand
+            };
+            btnAddCurrency.FlatAppearance.BorderSize = 0;
+            btnAddCurrency.Click += BtnAddCurrency_Click;
+
             var btnProfile = new Button { 
-                Text = "Profile", Location = new Point(870, 20), Size = new Size(100, 38),
+                Text = "Profile", Location = new Point(840, 20), Size = new Size(80, 38),
                 FlatStyle = FlatStyle.Flat, ForeColor = Color.White, BackColor = Color.FromArgb(0, 150, 136),
                 Font = new Font("Segoe UI", 10F, FontStyle.Bold)
             };
             btnProfile.FlatAppearance.BorderSize = 0;
             btnProfile.Click += (s, e) => new FormAdminProfile(currentAdmin).ShowDialog();
 
-            pnlRow1.Controls.AddRange(new Control[] { lblAdminWelcome, btnLogout, cmbCurrency, btnProfile });
+            pnlRow1.Controls.AddRange(new Control[] { lblAdminWelcome, btnLogout, cmbCurrency, btnAddCurrency, btnProfile });
 
             // === 3. MAIN CONTENT (Dock Fill Last) ===
             pnlMainContent = new Panel { Dock = DockStyle.Fill, BackColor = Color.Transparent, Padding = new Padding(30) };
@@ -181,6 +204,7 @@ namespace E_commerance_System.Forms
             btn.Click += (s, e) => {
                 tabMain.SelectedIndex = index;
                 HighlightButton(btn);
+                if (index == 6) LoadComplaints(); // Auto-refresh when entering Alert Center
             };
 
             return btn;
@@ -202,7 +226,7 @@ namespace E_commerance_System.Forms
         {
             // --- Dashboard Overview Tab ---
             var tabOverview = new TabPage() { BackColor = Color.FromArgb(245, 245, 250), Padding = new Padding(0) };
-            flpStats = new FlowLayoutPanel { Dock = DockStyle.Top, Height = 150, Padding = new Padding(20), BackColor = Color.Transparent };
+            flpStats = new FlowLayoutPanel { Dock = DockStyle.Top, Height = 280, Padding = new Padding(20), BackColor = Color.Transparent };
             
             lblTotalRevenue = CreateMetricLabel("ETB 0.00", "Total Revenue", Color.FromArgb(0, 150, 136), "💰");
             lblTotalOrders = CreateMetricLabel("0", "Total Orders", Color.FromArgb(26, 35, 126), "📦");
@@ -210,23 +234,97 @@ namespace E_commerance_System.Forms
             lblTotalProducts = CreateMetricLabel("0", "Products", Color.FromArgb(0, 121, 107), "🏷️");
             lblDeliveredOrders = CreateMetricLabel("0", "Delivered", Color.FromArgb(46, 125, 50), "✅");
             lblCancelledOrders = CreateMetricLabel("0", "Cancelled", Color.FromArgb(198, 40, 40), "❌");
-            lblActiveUsers = CreateMetricLabel("0", "Pending", Color.FromArgb(255, 143, 0), "⏳");
+            lblActiveUsers = CreateMetricLabel("0", "Pending Orders", Color.FromArgb(255, 143, 0), "⏳");
+            lblPendingComplaints = CreateMetricLabel("0", "User Reports", Color.FromArgb(198, 40, 40), "📋");
 
             flpStats.Controls.AddRange(new Control[] { 
                 lblTotalRevenue.Parent, lblTotalOrders.Parent, lblTotalCustomers.Parent, 
-                lblTotalProducts.Parent, lblDeliveredOrders.Parent, lblCancelledOrders.Parent, lblActiveUsers.Parent 
+                lblTotalProducts.Parent, lblDeliveredOrders.Parent, lblCancelledOrders.Parent, 
+                lblActiveUsers.Parent, lblPendingComplaints.Parent 
             });
 
-            var pnlWelcome = new Panel { Dock = DockStyle.Fill, BackColor = Color.White, Margin = new Padding(20) };
-            var lblWelcomeTitle = new Label { Text = "System Overview & Performance", Font = new Font("Segoe UI Semibold", 16F), ForeColor = Color.FromArgb(40, 40, 50), Location = new Point(30, 20), AutoSize = true };
+            var pnlWelcome = new Panel { Dock = DockStyle.Fill, BackColor = Color.White };
             
-            // Placeholder for a simple chart/graph
-            var pnlChart = new Panel { Location = new Point(30, 70), Size = new Size(920, 300), BackColor = Color.FromArgb(250, 250, 252) };
-            pnlChart.Paint += (s, e) => {
-                e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
-                var p = new Pen(Color.FromArgb(230, 230, 235));
-                for(int i=0; i<6; i++) e.Graphics.DrawLine(p, 0, i*50, pnlChart.Width, i*50); // Grid lines
+            var splitDashboard = new SplitContainer { 
+                Dock = DockStyle.Fill, Orientation = Orientation.Vertical, 
+                SplitterDistance = 750, BorderStyle = BorderStyle.None,
+                IsSplitterFixed = true
             };
+            pnlWelcome.Controls.Add(splitDashboard);
+
+            // LEFT SIDE: Charts & Performance
+            var pnlAnalytics = new Panel { Dock = DockStyle.Fill, Padding = new Padding(20) };
+            var lblWelcomeTitle = new Label { 
+                Text = "📈 Sales Performance & Analytics", 
+                Font = new Font("Segoe UI Semibold", 14F), 
+                ForeColor = Color.FromArgb(40, 40, 50), 
+                Location = new Point(20, 15), AutoSize = true 
+            };
+            
+            var pnlChartContainer = new Panel { 
+                Location = new Point(20, 60), 
+                Size = new Size(710, 420), 
+                BackColor = Color.White,
+                BorderStyle = BorderStyle.None
+            };
+            
+            var pbHero = new PictureBox {
+                Dock = DockStyle.Fill,
+                SizeMode = PictureBoxSizeMode.StretchImage,
+                Cursor = Cursors.Default
+            };
+            try {
+                string heroPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources", "dashboard_hero.png");
+                if (File.Exists(heroPath)) pbHero.Image = Image.FromFile(heroPath);
+                else {
+                    // Fallback to absolute path for now if bin/Debug doesn't have it yet
+                    string absPath = @"c:\Users\User\source\Assginments\E-commerance System\Resources\dashboard_hero.png";
+                    if (File.Exists(absPath)) pbHero.Image = Image.FromFile(absPath);
+                }
+            } catch { }
+
+            var pnlOverlay = new Panel {
+                Dock = DockStyle.Bottom, Height = 80, 
+                BackColor = Color.FromArgb(180, 0, 0, 0) // Semi-transparent black
+            };
+            var lblOverlay = new Label {
+                Text = "⚡ SYSTEM PERFORMANCE: OPTIMIZED\nGlobal store metrics are being tracked in real-time.",
+                ForeColor = Color.White, Font = new Font("Segoe UI", 10F, FontStyle.Bold),
+                Location = new Point(20, 15), AutoSize = true, BackColor = Color.Transparent
+            };
+            pnlOverlay.Controls.Add(lblOverlay);
+            pbHero.Controls.Add(pnlOverlay);
+            
+            pnlChartContainer.Controls.Add(pbHero);
+
+            pnlAnalytics.Controls.AddRange(new Control[] { lblWelcomeTitle, pnlChartContainer });
+            splitDashboard.Panel1.Controls.Add(pnlAnalytics);
+
+            // RIGHT SIDE: Recent Activity
+            var pnlActivity = new Panel { Dock = DockStyle.Fill, Padding = new Padding(20), BackColor = Color.FromArgb(250, 250, 252) };
+            var lblActTitle = new Label { Text = "🔔 Recent Activity", Font = new Font("Segoe UI Semibold", 12F), Location = new Point(15, 15), AutoSize = true };
+            
+            var flpActivity = new FlowLayoutPanel { 
+                Location = new Point(15, 55), Size = new Size(300, 500), 
+                FlowDirection = FlowDirection.TopDown, AutoScroll = true 
+            };
+            
+            void AddActivity(string icon, string text, string time) {
+                var item = new Panel { Size = new Size(270, 60), Margin = new Padding(0, 0, 0, 10), BackColor = Color.White };
+                item.Controls.Add(new Label { Text = icon, Font = new Font("Segoe UI", 12F), Location = new Point(10, 15), AutoSize = true });
+                item.Controls.Add(new Label { Text = text, Font = new Font("Segoe UI", 9F, FontStyle.Bold), Location = new Point(45, 10), Size = new Size(220, 20) });
+                item.Controls.Add(new Label { Text = time, Font = new Font("Segoe UI", 8F), ForeColor = Color.Gray, Location = new Point(45, 32), AutoSize = true });
+                flpActivity.Controls.Add(item);
+            }
+
+            AddActivity("📦", "New Order #1204 received", "2 mins ago");
+            AddActivity("👤", "New user 'Sarah_99' registered", "15 mins ago");
+            AddActivity("⚠️", "Low stock alert: Gaming Mouse", "1 hour ago");
+            AddActivity("✅", "Order #1198 delivered", "3 hours ago");
+            AddActivity("💬", "New support message from Alex", "5 hours ago");
+
+            pnlActivity.Controls.AddRange(new Control[] { lblActTitle, flpActivity });
+            splitDashboard.Panel2.Controls.Add(pnlActivity);
 
             tabOverview.Controls.Add(flpStats); // Top
             tabOverview.Controls.Add(pnlWelcome); // Fill
@@ -246,17 +344,18 @@ namespace E_commerance_System.Forms
             
             btnEditProduct = CreateActionButton("✏️ Edit Product", Color.FromArgb(25, 118, 210));
             btnEditProduct.Click += BtnEditProduct_Click;
+
+            btnDeleteProduct = CreateActionButton("🗑️ Delete Product", Color.FromArgb(198, 40, 40));
+            btnDeleteProduct.Click += BtnDeleteProduct_Click;
             
             btnToggleProduct = CreateActionButton("🔄 Toggle Visibility", Color.FromArgb(117, 117, 117));
             btnToggleProduct.Click += BtnToggleProduct_Click;
             
-            btnApplyDiscount = CreateActionButton("🏷️ Quick Discount", Color.FromArgb(211, 47, 47));
-            btnApplyDiscount.Click += BtnApplyDiscount_Click;
 
             btnRefreshProducts = CreateActionButton("🔄 Refresh", Color.FromArgb(96, 125, 139));
             btnRefreshProducts.Click += (s, e) => LoadProducts();
 
-            pnlProdButtons.Controls.AddRange(new Control[] { btnAddProduct, btnAddCategory, btnEditProduct, btnApplyDiscount, btnToggleProduct, btnRefreshProducts });
+            pnlProdButtons.Controls.AddRange(new Control[] { btnAddProduct, btnAddCategory, btnEditProduct, btnDeleteProduct, btnToggleProduct, btnRefreshProducts });
             
             // --- Search Panel for Products ---
             var pnlProdSearch = new Panel { Dock = DockStyle.Top, Height = 60, BackColor = Color.FromArgb(240, 242, 248), Padding = new Padding(10) };
@@ -275,10 +374,9 @@ namespace E_commerance_System.Forms
 
             pnlProdSearch.Controls.AddRange(new Control[] { lblCat, cmbProdCategory, lblSearch, txtProdSearch, btnDoSearch });
 
-            // Add to tab: Dock.Top/Bottom first, then Fill
+            tabProducts.Controls.Add(dgvProducts);
             tabProducts.Controls.Add(pnlProdSearch);
             tabProducts.Controls.Add(pnlProdButtons);
-            tabProducts.Controls.Add(dgvProducts);
             tabMain.TabPages.Add(tabProducts);
 
             // --- Orders Tab ---
@@ -287,7 +385,7 @@ namespace E_commerance_System.Forms
             dgvOrders.Dock = DockStyle.Top;
             dgvOrders.SelectionChanged += DgvOrders_SelectionChanged;
             
-            var pnlOrderControls = new Panel { Dock = DockStyle.Top, Height = 550, BackColor = Color.FromArgb(250, 250, 252), Padding = new Padding(20) };
+            var pnlOrderControls = new Panel { Dock = DockStyle.Top, Height = 550, BackColor = Color.FromArgb(250, 250, 252), Padding = new Padding(20), AutoScroll = true };
             
             var lblStatus = new Label { Text = "Set Order Status:", Location = new Point(20, 20), AutoSize = true, Font = new Font("Segoe UI", 10F, FontStyle.Bold) };
             cmbOrderStatus = new ComboBox { Location = new Point(160, 18), Size = new Size(150, 28), DropDownStyle = ComboBoxStyle.DropDownList };
@@ -313,7 +411,8 @@ namespace E_commerance_System.Forms
             btnRefreshOrders.Size = new Size(100, 35);
             btnRefreshOrders.Click += (s, e) => LoadOrders();
 
-            pbPaymentProof = new PictureBox { Location = new Point(20, 70), Size = new Size(400, 250), SizeMode = PictureBoxSizeMode.Zoom, BorderStyle = BorderStyle.FixedSingle, BackColor = Color.White };
+            pbPaymentProof = new PictureBox { Location = new Point(20, 70), Size = new Size(400, 250), SizeMode = PictureBoxSizeMode.Zoom, BorderStyle = BorderStyle.FixedSingle, BackColor = Color.White, Cursor = Cursors.Hand };
+            pbPaymentProof.Click += (s, e) => ZoomImage();
             lblActualAddress = new Label { Location = new Point(440, 70), Size = new Size(500, 250), BorderStyle = BorderStyle.FixedSingle, Padding = new Padding(15), BackColor = Color.White, Font = new Font("Consolas", 10F) };
             lblProofHeader = new Label { Text = "Payment Evidence", Location = new Point(20, 50), AutoSize = true };
             
@@ -368,25 +467,32 @@ namespace E_commerance_System.Forms
 
             // --- Inventory Tab ---
             var tabInventory = new TabPage() { BackColor = Color.White, Padding = new Padding(0) };
-            
+
             var pnlInvControls = new Panel { Dock = DockStyle.Top, Height = 60, BackColor = Color.FromArgb(240, 242, 248) };
-            btnAddStock = CreateHeaderButton("📦 Add Stock", 20);
-            btnAddStock.BackColor = Color.FromArgb(0, 150, 136);
+            btnRefreshInv = CreateActionButton("🔄 Sync Inventory", Color.FromArgb(96, 125, 139));
+            btnRefreshInv.Location = new Point(20, 12); btnRefreshInv.Size = new Size(180, 35);
+            btnRefreshInv.Click += (s, e) => { 
+                LoadInventory(); 
+                MessageBox.Show("🔄 Inventory data synchronized with database!", "Sync Success", MessageBoxButtons.OK, MessageBoxIcon.Information); 
+            };
+
+            btnAddStock = CreateActionButton("📦 Add Stock", Color.FromArgb(0, 150, 136));
+            btnAddStock.Location = new Point(210, 12); btnAddStock.Size = new Size(180, 35);
             btnAddStock.Click += (s, e) => {
                 if (dgvInventory.SelectedRows.Count == 0) { MessageBox.Show("Select a product to restock."); return; }
-                int id = Convert.ToInt32(dgvInventory.SelectedRows[0].Cells["ID"].Value);
+                int id = Convert.ToInt32(dgvInventory.SelectedRows[0].Cells["Product ID"].Value);
                 string input = ShowInputDialog("Restock", "Enter additional stock quantity:");
                 if (int.TryParse(input, out int added)) {
                     if (ProductService.UpdateStock(id, added)) { MessageBox.Show("✅ Stock updated!"); LoadInventory(); }
                 }
             };
-            pnlInvControls.Controls.Add(btnAddStock);
+            pnlInvControls.Controls.AddRange(new Control[] { btnRefreshInv, btnAddStock });
 
             dgvInventory = CreateGrid(new Point(0, 0), new Size(980, 520));
             dgvInventory.Dock = DockStyle.Fill;
 
-            tabInventory.Controls.Add(pnlInvControls); // Top
-            tabInventory.Controls.Add(dgvInventory); // Fill
+            tabInventory.Controls.Add(dgvInventory);
+            tabInventory.Controls.Add(pnlInvControls);
             tabMain.TabPages.Add(tabInventory);
 
             // --- Reports Tab ---
@@ -415,12 +521,24 @@ namespace E_commerance_System.Forms
             btnExportCSV.Click += (s, e) => ExportToCSV();
 
             pnlRepTop.Controls.AddRange(new Control[] { lblPeriod, cmbReportPeriod, btnRefreshReport, btnExportCSV });
-            tabReports.Controls.Add(pnlRepTop); // Top
+            // Bottom Summary Panel
+            var pnlRepBottom = new Panel { Dock = DockStyle.Bottom, Height = 60, BackColor = Color.FromArgb(240, 242, 248), Padding = new Padding(20, 10, 20, 10) };
+            lblReportSummary = new Label { 
+                Text = "Select a period and click Generate to see statistics.", 
+                Font = new Font("Segoe UI", 11F, FontStyle.Bold), 
+                ForeColor = Color.FromArgb(26, 35, 126), 
+                AutoSize = true, 
+                Dock = DockStyle.Left 
+            };
+            pnlRepBottom.Controls.Add(lblReportSummary);
+
             tabReports.Controls.Add(dgvSalesReport); // Fill
+            tabReports.Controls.Add(pnlRepTop); // Top
+            tabReports.Controls.Add(pnlRepBottom); // Bottom
             tabMain.TabPages.Add(tabReports);
 
             // --- Alert Center (Complaints) Tab ---
-            var tabComplaints = new TabPage("Alert Center") { BackColor = Color.White };
+            var tabComplaints = new TabPage("User Reports") { BackColor = Color.White };
             dgvComplaints = CreateGrid(new Point(0, 0), new Size(980, 300));
             dgvComplaints.Dock = DockStyle.Fill;
             
@@ -434,32 +552,65 @@ namespace E_commerance_System.Forms
             btnSearchComp.Click += (s, e) => LoadComplaints(txtCompSearch.Text.Trim());
             pnlCompTop.Controls.AddRange(new Control[] { lblSearchComp, txtCompSearch, btnSearchComp });
             // Bottom Detail Panel
-            var pnlCompBottom = new Panel { Dock = DockStyle.Bottom, Height = 180, Padding = new Padding(10), BackColor = Color.FromArgb(245, 245, 250) };
-            var lblDetailTitle = new Label { Text = "📄 Detailed Message:", Dock = DockStyle.Top, Height = 25, Font = new Font("Segoe UI", 9F, FontStyle.Bold) };
+            var pnlCompBottom = new Panel { Dock = DockStyle.Bottom, Height = 250, Padding = new Padding(10), BackColor = Color.FromArgb(245, 245, 250) };
+            
+            var pnlCompSplit = new TableLayoutPanel { Dock = DockStyle.Fill, ColumnCount = 2, RowCount = 1 };
+            pnlCompSplit.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            pnlCompSplit.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            
+            var pnlUserMsg = new Panel { Dock = DockStyle.Fill, Padding = new Padding(5) };
+            var lblDetailTitle = new Label { Text = "📄 User Message:", Dock = DockStyle.Top, Height = 25, Font = new Font("Segoe UI", 9F, FontStyle.Bold) };
             txtCompDetail = new TextBox { 
                 Dock = DockStyle.Fill, Multiline = true, ReadOnly = true, 
                 ScrollBars = ScrollBars.Vertical, Font = new Font("Segoe UI", 10F),
                 BackColor = Color.White, BorderStyle = BorderStyle.FixedSingle
             };
+            pnlUserMsg.Controls.Add(txtCompDetail);
+            pnlUserMsg.Controls.Add(lblDetailTitle);
+
+            var pnlAdminReply = new Panel { Dock = DockStyle.Fill, Padding = new Padding(5) };
+            var lblReplyTitle = new Label { Text = "✍️ Your Response / Answer:", Dock = DockStyle.Top, Height = 25, Font = new Font("Segoe UI", 9F, FontStyle.Bold) };
+            txtAdminReply = new TextBox { 
+                Dock = DockStyle.Fill, Multiline = true, 
+                ScrollBars = ScrollBars.Vertical, Font = new Font("Segoe UI", 10F),
+                BackColor = Color.White, BorderStyle = BorderStyle.FixedSingle
+            };
+            pnlAdminReply.Controls.Add(txtAdminReply);
+            pnlAdminReply.Controls.Add(lblReplyTitle);
+
+            pnlCompSplit.Controls.Add(pnlUserMsg, 0, 0);
+            pnlCompSplit.Controls.Add(pnlAdminReply, 1, 0);
+
+            var pnlCompActions = new Panel { Dock = DockStyle.Right, Width = 220, Padding = new Padding(10) };
             
-            var pnlCompActions = new Panel { Dock = DockStyle.Right, Width = 200, Padding = new Padding(10) };
+            var btnSendReply = CreateActionButton("💬 Send Answer", Color.FromArgb(25, 118, 210));
+            btnSendReply.Width = 200;
+            btnSendReply.Click += (s, e) => HandleComplaintAction("Answered");
+
             var btnResolve = CreateActionButton("✅ Resolve", Color.FromArgb(46, 125, 50));
-            btnResolve.Width = 180;
+            btnResolve.Width = 200;
+            btnResolve.Location = new Point(10, 60);
             btnResolve.Click += (s, e) => HandleComplaintAction("Resolved");
             
             var btnDismiss = CreateActionButton("🗑️ Delete", Color.FromArgb(198, 40, 40));
-            btnDismiss.Width = 180;
-            btnDismiss.Location = new Point(10, 60);
+            btnDismiss.Width = 200;
+            btnDismiss.Location = new Point(10, 110);
             btnDismiss.Click += (s, e) => HandleComplaintAction("Deleted");
 
-            pnlCompActions.Controls.AddRange(new Control[] { btnResolve, btnDismiss });
-            pnlCompBottom.Controls.AddRange(new Control[] { txtCompDetail, lblDetailTitle, pnlCompActions });
+            pnlCompActions.Controls.AddRange(new Control[] { btnSendReply, btnResolve, btnDismiss });
+            pnlCompBottom.Controls.AddRange(new Control[] { pnlCompSplit, pnlCompActions });
 
             dgvComplaints.SelectionChanged += (s, e) => {
                 if (dgvComplaints.SelectedRows.Count > 0)
+                {
                     txtCompDetail.Text = dgvComplaints.SelectedRows[0].Cells["Detailed Message"].Value.ToString();
+                    txtAdminReply.Clear();
+                }
                 else
+                {
                     txtCompDetail.Clear();
+                    txtAdminReply.Clear();
+                }
             };
 
             tabComplaints.Controls.Add(dgvComplaints);
@@ -487,6 +638,20 @@ namespace E_commerance_System.Forms
         }
 
         // === GALLERY LOGIC ===
+        private string GetProjectRootDirectory()
+        {
+            string dir = AppDomain.CurrentDomain.BaseDirectory;
+            while (!string.IsNullOrEmpty(dir))
+            {
+                if (System.IO.Directory.GetFiles(dir, "*.csproj").Length > 0)
+                {
+                    return dir;
+                }
+                dir = System.IO.Path.GetDirectoryName(dir);
+            }
+            return @"c:\Users\User\source\Assginments\E-commerance System";
+        }
+
         private void ShowCurrentImage()
         {
             if (currentProofPaths == null || currentProofPaths.Length == 0) return;
@@ -497,14 +662,20 @@ namespace E_commerance_System.Forms
             string path = currentProofPaths[currentProofIndex].Trim();
             string fullPath = System.IO.Path.IsPathRooted(path) ? path : System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Proofs", path);
 
+            if (!System.IO.File.Exists(fullPath))
+            {
+                string projectRoot = GetProjectRootDirectory();
+                fullPath = System.IO.Path.Combine(projectRoot, "Proofs", path);
+            }
+
             if (System.IO.File.Exists(fullPath))
             {
                 try {
-                    using (var fs = new System.IO.FileStream(fullPath, System.IO.FileMode.Open, System.IO.FileAccess.Read))
-                {
                     if (pbPaymentProof.Image != null) pbPaymentProof.Image.Dispose();
-                    pbPaymentProof.Image = Image.FromStream(fs);
-                }
+                    using (var img = Image.FromFile(fullPath))
+                    {
+                        pbPaymentProof.Image = new Bitmap(img);
+                    }
                     lblProofHeader.Text = $"🖼️ Evidence {currentProofIndex + 1} of {currentProofPaths.Length}";
                     btnPrevProof.Visible = btnNextProof.Visible = currentProofPaths.Length > 1;
                 }
@@ -548,7 +719,7 @@ namespace E_commerance_System.Forms
                 ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.Single,
                 GridColor = Color.FromArgb(224, 224, 224),
                 AlternatingRowsDefaultCellStyle = new DataGridViewCellStyle { BackColor = Color.FromArgb(245, 248, 255) },
-                DefaultCellStyle = new DataGridViewCellStyle { SelectionBackColor = Color.FromArgb(230, 240, 255), SelectionForeColor = PrimaryColor, Padding = new Padding(10, 0, 10, 0) },
+                DefaultCellStyle = new DataGridViewCellStyle { SelectionBackColor = Color.FromArgb(230, 240, 255), SelectionForeColor = PrimaryColor, Padding = new Padding(5, 0, 5, 0) },
                 ColumnHeadersDefaultCellStyle = new DataGridViewCellStyle { 
                     BackColor = PrimaryColor, 
                     ForeColor = Color.White, 
@@ -565,7 +736,13 @@ namespace E_commerance_System.Forms
 
         private Button CreateActionButton(string text, Color bg)
         {
-            var btn = new Button { Text = text, Size = new Size(160, 38), FlatStyle = FlatStyle.Flat, BackColor = bg, ForeColor = Color.White, Font = new Font("Segoe UI", 9.5F, FontStyle.Bold), Cursor = Cursors.Hand, Margin = new Padding(0, 0, 10, 0) };
+            var btn = new Button {
+                Text = text, FlatStyle = FlatStyle.Flat, ForeColor = Color.White,
+                BackColor = bg, Font = new Font("Segoe UI", 9.5F, FontStyle.Bold),
+                Height = 42, Cursor = Cursors.Hand, AutoSize = true,
+                Padding = new Padding(15, 0, 15, 0),
+                MinimumSize = new Size(120, 42)
+            };
             btn.FlatAppearance.BorderSize = 0;
             return btn;
         }
@@ -764,7 +941,7 @@ namespace E_commerance_System.Forms
                 using (var conn = new SqlConnection(DatabaseHelper.ConnectionString))
                 {
                     conn.Open();
-                    string sql = @"SELECT P.ProductId as [ID], P.ProductCode as [Code], P.Name as [Name], 
+                    string sql = @"SELECT P.ProductId as [Product ID], P.ProductCode as [Code], P.Name as [Name], 
                                    C.CategoryName as [Category], P.Price as [Price], P.Stock as [Stock], 
                                    P.MinStockLevel as [Reorder Level]
                                    FROM Products P 
@@ -775,9 +952,12 @@ namespace E_commerance_System.Forms
                     using (var da = new SqlDataAdapter(sql, conn))
                         da.Fill(dt);
 
+                    if (dgvInventory == null) return;
+                    dgvInventory.DataSource = null; // Clear first
                     dgvInventory.DataSource = dt;
+                    dgvInventory.Refresh();
                     dgvInventory.ColumnHeadersVisible = true;
-                    if (dgvInventory.Columns.Contains("ID")) dgvInventory.Columns["ID"].Visible = false;
+                    if (dgvInventory.Columns.Contains("Product ID")) dgvInventory.Columns["Product ID"].Visible = false;
                     
                     // Formatting
                     if (dgvInventory.Columns.Contains("Price"))
@@ -813,11 +993,12 @@ namespace E_commerance_System.Forms
                 dt.Columns.Add("Full Name", typeof(string));
                 dt.Columns.Add("Email", typeof(string));
                 dt.Columns.Add("Phone", typeof(string));
+                dt.Columns.Add("Currency", typeof(string));
                 dt.Columns.Add("Status", typeof(string));
                 dt.Columns.Add("Joined Date", typeof(string));
 
                 foreach (var u in users)
-                    dt.Rows.Add(u.UserId, u.Username, $"{u.FirstName} {u.LastName}", u.Email, u.Phone, u.IsActive ? "Active" : "Inactive", u.CreatedDate.ToString("yyyy-MM-dd"));
+                    dt.Rows.Add(u.UserId, u.Username, $"{u.FirstName} {u.LastName}", u.Email, u.Phone, u.PreferredCurrency, u.IsActive ? "Active" : "Inactive", u.CreatedDate.ToString("yyyy-MM-dd"));
 
                 dgvCustomers.DataSource = dt;
                 dgvCustomers.ColumnHeadersVisible = true;
@@ -906,6 +1087,41 @@ namespace E_commerance_System.Forms
             if (form.ShowDialog() == DialogResult.OK) LoadProducts();
         }
 
+        private void BtnDeleteProduct_Click(object sender, EventArgs e)
+        {
+            if (dgvProducts.SelectedRows.Count == 0) { MessageBox.Show("Please select a product to delete."); return; }
+            int id = Convert.ToInt32(dgvProducts.SelectedRows[0].Cells["Product ID"].Value);
+            string name = dgvProducts.SelectedRows[0].Cells["Name"].Value.ToString();
+
+            var result = MessageBox.Show($"⚠️ ARE YOU SURE?\n\nThis will PERMANENTLY DELETE '{name}' from the database.\nThis action cannot be undone.", 
+                "Confirm Permanent Deletion", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+
+            if (result == DialogResult.Yes)
+            {
+                if (ProductService.PermanentDeleteProduct(id))
+                {
+                    MessageBox.Show("✅ Product deleted permanently.");
+                    LoadProducts();
+                    LoadDashboardStats();
+                }
+                else
+                {
+                    // Fallback to soft delete
+                    var softResult = MessageBox.Show($"❌ Cannot permanently delete '{name}' because it is linked to existing orders.\n\nWould you like to DEACTIVATE (hide) it instead?", 
+                        "Delete Restricted", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                    
+                    if (softResult == DialogResult.Yes)
+                    {
+                        if (ProductService.DeleteProduct(id))
+                        {
+                            MessageBox.Show("✅ Product has been deactivated and hidden from customers.");
+                            LoadProducts();
+                        }
+                    }
+                }
+            }
+        }
+        
         private void BtnEditProduct_Click(object sender, EventArgs e)
         {
             if (dgvProducts.SelectedRows.Count == 0) { MessageBox.Show("Please select a product."); return; }
@@ -1007,34 +1223,7 @@ namespace E_commerance_System.Forms
             }
         }
 
-       
 
-        private string ShowInputDialog(string title, string prompt)
-        {
-            Form form = new Form();
-            Label label = new Label();
-            TextBox textBox = new TextBox();
-            Button buttonOk = new Button();
-
-            form.Text = title;
-            label.Text = prompt;
-            buttonOk.Text = "OK";
-            buttonOk.DialogResult = DialogResult.OK;
-
-            label.SetBounds(20, 20, 360, 25);
-            textBox.SetBounds(20, 50, 360, 30);
-            buttonOk.SetBounds(280, 100, 100, 30);
-
-            form.ClientSize = new Size(400, 150);
-            form.Controls.AddRange(new Control[] { label, textBox, buttonOk });
-            form.FormBorderStyle = FormBorderStyle.FixedDialog;
-            form.StartPosition = FormStartPosition.CenterScreen;
-            form.MaximizeBox = false;
-            form.MinimizeBox = false;
-            form.AcceptButton = buttonOk;
-
-            return form.ShowDialog() == DialogResult.OK ? textBox.Text : "";
-        }
         private Label CreateMetricLabel(string value, string title, Color color, string icon)
         {
             var pnl = new Panel { Size = new Size(185, 100), BackColor = Color.White, Margin = new Padding(10) };
@@ -1076,6 +1265,8 @@ namespace E_commerance_System.Forms
                                 int cancelledCount = reader.IsDBNull(reader.GetOrdinal("CancelledOrders")) ? 0 : reader.GetInt32(reader.GetOrdinal("CancelledOrders"));
                                 int pendingOrders = reader.IsDBNull(reader.GetOrdinal("PendingOrders")) ? 0 : reader.GetInt32(reader.GetOrdinal("PendingOrders"));
 
+                                int pendingComplaints = reader.IsDBNull(reader.GetOrdinal("PendingComplaints")) ? 0 : reader.GetInt32(reader.GetOrdinal("PendingComplaints"));
+
                                 decimal displayRevenue = rate != 0 ? totalRevenue / rate : totalRevenue;
                                 lblTotalRevenue.Text = $"{displayRevenue:N2} {symbol}";
                                 lblTotalOrders.Text = totalOrders.ToString();
@@ -1084,11 +1275,19 @@ namespace E_commerance_System.Forms
                                 lblDeliveredOrders.Text = deliveredCount.ToString();
                                 lblCancelledOrders.Text = cancelledCount.ToString();
                                 lblActiveUsers.Text = pendingOrders.ToString();
-                                lblCancelledOrders.Text = cancelledCount.ToString();
-                                lblActiveUsers.Text = pendingOrders.ToString();
+                                lblPendingComplaints.Text = pendingComplaints.ToString();
                                 
-                                // Hide Notification Badge
-                                lblNotifBadge.Visible = false;
+                                // Update Notification Badge
+                                if (pendingComplaints > 0)
+                                {
+                                    lblNotifBadge.Text = pendingComplaints > 99 ? "99+" : pendingComplaints.ToString();
+                                    lblNotifBadge.Visible = true;
+                                    lblNotifBadge.BringToFront();
+                                }
+                                else
+                                {
+                                    lblNotifBadge.Visible = false;
+                                }
                             }
                         }
                     }
@@ -1096,16 +1295,16 @@ namespace E_commerance_System.Forms
             }
             catch (Exception ex) 
             { 
-                if (ex.Message.Contains("GetDashboardStats"))
+                if (ex.Message.Contains("GetDashboardStats") || ex.Message.Contains("PendingComplaints"))
                 {
-                    // Self-healing: Re-create the SP if it's missing
+                    // Self-healing: Re-create the SP if it's missing or outdated
                     try {
                         using (var conn = DatabaseHelper.GetConnection()) {
                             conn.Open();
                             string drop = "IF OBJECT_ID('GetDashboardStats', 'P') IS NOT NULL DROP PROCEDURE GetDashboardStats;";
                             using (var cmd = new SqlCommand(drop, conn)) cmd.ExecuteNonQuery();
 
-                            string script = @"CREATE PROCEDURE GetDashboardStats AS BEGIN SELECT (SELECT COUNT(*) FROM Users WHERE IsActive = 1) AS TotalCustomers, (SELECT COUNT(*) FROM Products WHERE IsActive = 1) AS TotalProducts, (SELECT COUNT(*) FROM Orders) AS TotalOrders, (SELECT ISNULL(SUM(TotalAmount), 0) FROM Orders WHERE Status = 'Delivered' OR Status = 'Completed') AS TotalRevenue, (SELECT COUNT(*) FROM Orders WHERE Status = 'Delivered' OR Status = 'Completed') AS DeliveredOrders, (SELECT COUNT(*) FROM Orders WHERE Status = 'Cancelled') AS CancelledOrders, (SELECT COUNT(*) FROM Orders WHERE Status = 'Pending') AS PendingOrders, (SELECT COUNT(*) FROM Reviews WHERE IsApproved = 0) AS PendingReviews END";
+                            string script = @"CREATE PROCEDURE GetDashboardStats AS BEGIN SELECT (SELECT COUNT(*) FROM Users WHERE IsActive = 1) AS TotalCustomers, (SELECT COUNT(*) FROM Products WHERE IsActive = 1) AS TotalProducts, (SELECT COUNT(*) FROM Orders) AS TotalOrders, (SELECT ISNULL(SUM(TotalAmount), 0) FROM Orders WHERE Status = 'Delivered' OR Status = 'Completed') AS TotalRevenue, (SELECT COUNT(*) FROM Orders WHERE Status = 'Delivered' OR Status = 'Completed') AS DeliveredOrders, (SELECT COUNT(*) FROM Orders WHERE Status = 'Cancelled') AS CancelledOrders, (SELECT COUNT(*) FROM Orders WHERE Status = 'Pending') AS PendingOrders, (SELECT COUNT(*) FROM Reviews WHERE IsApproved = 0) AS PendingReviews, (SELECT COUNT(*) FROM Complaints WHERE Status = 'Pending') AS PendingComplaints END";
                             using (var cmd = new SqlCommand(script, conn)) cmd.ExecuteNonQuery();
                         }
                         LoadDashboardStats(); // Retry once
@@ -1159,6 +1358,9 @@ namespace E_commerance_System.Forms
                 dt.Columns.Add("Price", typeof(decimal));
                 dt.Columns.Add("Stock", typeof(int));
                 dt.Columns.Add("Brand", typeof(string));
+                dt.Columns.Add("Model", typeof(string));
+                dt.Columns.Add("Color", typeof(string));
+                dt.Columns.Add("Size", typeof(string));
                 dt.Columns.Add("Active", typeof(string));
 
                 string currency = CurrencyService.CurrentCurrency;
@@ -1167,7 +1369,7 @@ namespace E_commerance_System.Forms
 
                 foreach (var p in filtered) {
                     decimal displayPrice = rate != 0 ? p.Price / rate : p.Price;
-                    dt.Rows.Add(p.ProductId, p.ProductCode, p.Name, p.CategoryName, displayPrice, p.Stock, p.Brand, p.IsActive ? "✅ Yes" : "❌ No");
+                    dt.Rows.Add(p.ProductId, p.ProductCode, p.Name, p.CategoryName, displayPrice, p.Stock, p.Brand, p.Model, p.Color, p.Size, p.IsActive ? "✅ Yes" : "❌ No");
                 }
                 dgvProducts.DataSource = dt;
                 dgvProducts.ColumnHeadersVisible = true;
@@ -1176,7 +1378,14 @@ namespace E_commerance_System.Forms
                 {
                     dgvProducts.Columns["Price"].DefaultCellStyle.Format = "N2";
                     dgvProducts.Columns["Price"].HeaderText = $"Price ({symbol})";
+                    dgvProducts.Columns["Price"].Width = 100;
                 }
+                if (dgvProducts.Columns.Contains("Stock")) dgvProducts.Columns["Stock"].Width = 70;
+                if (dgvProducts.Columns.Contains("Brand")) dgvProducts.Columns["Brand"].Width = 100;
+                if (dgvProducts.Columns.Contains("Model")) dgvProducts.Columns["Model"].Width = 100;
+                if (dgvProducts.Columns.Contains("Color")) dgvProducts.Columns["Color"].Width = 80;
+                if (dgvProducts.Columns.Contains("Size")) dgvProducts.Columns["Size"].Width = 60;
+                if (dgvProducts.Columns.Contains("Active")) dgvProducts.Columns["Active"].Width = 80;
             }
             catch (Exception ex) { MessageBox.Show("Filter Error: " + ex.Message); }
         }
@@ -1219,22 +1428,29 @@ namespace E_commerance_System.Forms
                 {
                     conn.Open();
                     string whereClause = string.IsNullOrEmpty(filter) ? "" : "WHERE U.Username LIKE @f OR C.Subject LIKE @f OR C.Message LIKE @f";
-                    string sql = $@"SELECT C.ComplaintId as [Alert ID], U.Username as [Customer], C.Subject as [Topic], C.Message as [Detailed Message], C.Status, C.CreatedDate as [Received Date] 
-                                   FROM Complaints C JOIN Users U ON C.UserId = U.UserId 
-                                   {whereClause}
+                    string sql = $@"SELECT C.ComplaintId as [Alert ID], ISNULL(U.Username, 'Unknown User') as [Customer], C.Subject as [Topic], C.Message as [Detailed Message], C.Status, C.CreatedDate as [Received Date] 
+                                   FROM Complaints C LEFT JOIN Users U ON C.UserId = U.UserId 
+                                   {whereClause} 
                                    ORDER BY C.CreatedDate DESC";
                     
-                    SqlDataAdapter da = new SqlDataAdapter(sql, conn);
-                    if (!string.IsNullOrEmpty(filter)) da.SelectCommand.Parameters.AddWithValue("@f", $"%{filter}%");
-                    
-                    DataTable dt = new DataTable();
-                    da.Fill(dt);
-                    dgvComplaints.DataSource = dt;
-                    dgvComplaints.ColumnHeadersVisible = true;
-                    if (dgvComplaints.Columns.Contains("Alert ID")) dgvComplaints.Columns["Alert ID"].Visible = false;
+                    using (var cmd = new SqlCommand(sql, conn))
+                    {
+                        if (!string.IsNullOrEmpty(filter)) cmd.Parameters.AddWithValue("@f", "%" + filter + "%");
+                        SqlDataAdapter da = new SqlDataAdapter(cmd);
+                        DataTable dt = new DataTable();
+                        da.Fill(dt);
+                        dgvComplaints.DataSource = dt;
+                        dgvComplaints.ColumnHeadersVisible = true;
+                        if (dgvComplaints.Columns.Contains("Alert ID")) dgvComplaints.Columns["Alert ID"].Visible = false;
+                        // Ensure Message column is visible but has a reasonable width
+                        if (dgvComplaints.Columns.Contains("Detailed Message")) {
+                            dgvComplaints.Columns["Detailed Message"].Visible = true;
+                            dgvComplaints.Columns["Detailed Message"].Width = 300;
+                        }
+                    }
                 }
             }
-            catch { }
+            catch (Exception ex) { MessageBox.Show("Error loading complaints: " + ex.Message); }
         }
 
         private void HandleComplaintAction(string action)
@@ -1247,20 +1463,92 @@ namespace E_commerance_System.Forms
                 using (var conn = DatabaseHelper.GetConnection())
                 {
                     conn.Open();
-                    string sql = action == "Resolved" 
-                        ? "UPDATE Complaints SET Status = 'Resolved' WHERE ComplaintId = @id"
-                        : "DELETE FROM Complaints WHERE ComplaintId = @id";
+                    string sql = "";
+                    if (action == "Answered")
+                    {
+                        if (string.IsNullOrWhiteSpace(txtAdminReply.Text)) { MessageBox.Show("Please type an answer first."); return; }
+                        sql = "UPDATE Complaints SET AdminReply = @reply, ReplyDate = GETDATE(), Status = 'Answered' WHERE ComplaintId = @id";
+                    }
+                    else if (action == "Resolved")
+                    {
+                        sql = "UPDATE Complaints SET Status = 'Resolved' WHERE ComplaintId = @id";
+                    }
+                    else
+                    {
+                        sql = "DELETE FROM Complaints WHERE ComplaintId = @id";
+                    }
                     
                     using (var cmd = new SqlCommand(sql, conn))
                     {
                         cmd.Parameters.AddWithValue("@id", id);
+                        if (action == "Answered") cmd.Parameters.AddWithValue("@reply", txtAdminReply.Text.Trim());
                         cmd.ExecuteNonQuery();
                     }
                 }
+                MessageBox.Show($"✅ Alert successfully {action}!");
                 LoadComplaints();
-                MessageBox.Show($"Complaint {action} successfully.");
+                LoadDashboardStats();
             }
             catch (Exception ex) { MessageBox.Show("Error: " + ex.Message); }
+        }
+
+        private string ShowInputDialog(string title, string prompt)
+        {
+            Form promptForm = new Form() {
+                Width = 400, Height = 180, FormBorderStyle = FormBorderStyle.FixedDialog,
+                Text = title, StartPosition = FormStartPosition.CenterParent, BackColor = Color.White
+            };
+            Label textLabel = new Label() { Left = 20, Top = 20, Text = prompt, AutoSize = true, Font = new Font("Segoe UI", 9F) };
+            TextBox textBox = new TextBox() { Left = 20, Top = 50, Width = 340, Font = new Font("Segoe UI", 10F) };
+            Button confirmation = new Button() { Text = "OK", Left = 260, Width = 100, Top = 90, DialogResult = DialogResult.OK, FlatStyle = FlatStyle.Flat, BackColor = Color.FromArgb(26, 35, 126), ForeColor = Color.White };
+            confirmation.Click += (sender, e) => { promptForm.Close(); };
+            promptForm.Controls.Add(textBox);
+            promptForm.Controls.Add(confirmation);
+            promptForm.Controls.Add(textLabel);
+            promptForm.AcceptButton = confirmation;
+            return promptForm.ShowDialog() == DialogResult.OK ? textBox.Text : "";
+        }
+
+        private void BtnAddCurrency_Click(object sender, EventArgs e)
+        {
+            Form addCurrForm = new Form() {
+                Width = 400, Height = 280, FormBorderStyle = FormBorderStyle.FixedDialog,
+                Text = "Add New Currency", StartPosition = FormStartPosition.CenterParent, BackColor = Color.White
+            };
+            
+            Label lblCode = new Label() { Left = 20, Top = 20, Text = "Currency Code (e.g., GBP):", AutoSize = true, Font = new Font("Segoe UI", 9F, FontStyle.Bold) };
+            TextBox txtCode = new TextBox() { Left = 20, Top = 45, Width = 340, Font = new Font("Segoe UI", 10F) };
+
+            Label lblRate = new Label() { Left = 20, Top = 80, Text = "Rate to ETB (e.g., 0.015):", AutoSize = true, Font = new Font("Segoe UI", 9F, FontStyle.Bold) };
+            TextBox txtRate = new TextBox() { Left = 20, Top = 105, Width = 340, Font = new Font("Segoe UI", 10F) };
+
+            Label lblSymbol = new Label() { Left = 20, Top = 140, Text = "Symbol (e.g., £):", AutoSize = true, Font = new Font("Segoe UI", 9F, FontStyle.Bold) };
+            TextBox txtSymbol = new TextBox() { Left = 20, Top = 165, Width = 340, Font = new Font("Segoe UI", 10F) };
+
+            Button btnSave = new Button() { Text = "Save", Left = 160, Width = 100, Top = 200, FlatStyle = FlatStyle.Flat, BackColor = Color.FromArgb(46, 125, 50), ForeColor = Color.White };
+            Button btnCancel = new Button() { Text = "Cancel", Left = 270, Width = 90, Top = 200, FlatStyle = FlatStyle.Flat, BackColor = Color.FromArgb(198, 40, 40), ForeColor = Color.White };
+
+            btnCancel.Click += (s, ev) => addCurrForm.Close();
+            btnSave.Click += (s, ev) => {
+                if (string.IsNullOrWhiteSpace(txtCode.Text) || string.IsNullOrWhiteSpace(txtRate.Text) || string.IsNullOrWhiteSpace(txtSymbol.Text)) {
+                    MessageBox.Show("Please fill all fields."); return;
+                }
+                if (!decimal.TryParse(txtRate.Text, out decimal rate)) {
+                    MessageBox.Show("Invalid rate format."); return;
+                }
+                if (CurrencyService.AddCurrency(txtCode.Text.ToUpper(), rate, txtSymbol.Text)) {
+                    MessageBox.Show("✅ Currency added successfully!");
+                    CurrencyService.SyncCurrencySelector(cmbCurrency, () => {
+                        LoadDashboardStats(); LoadAllData();
+                    });
+                    addCurrForm.Close();
+                } else {
+                    MessageBox.Show("❌ Failed to add currency. It might already exist.");
+                }
+            };
+
+            addCurrForm.Controls.AddRange(new Control[] { lblCode, txtCode, lblRate, txtRate, lblSymbol, txtSymbol, btnSave, btnCancel });
+            addCurrForm.ShowDialog();
         }
 
         private void LoadAllData()
@@ -1273,69 +1561,5 @@ namespace E_commerance_System.Forms
             LoadComplaints();
             LoadDashboardStats();
         }
-
-
-        private void BtnApplyDiscount_Click(object sender, EventArgs e)
-        {
-            if (dgvProducts.SelectedRows.Count == 0) { MessageBox.Show("Please select a product first."); return; }
-            int productId = Convert.ToInt32(dgvProducts.SelectedRows[0].Cells["ID"].Value);
-            var product = ProductService.GetProductById(productId);
-            if (product == null) return;
-
-            Form f = new Form { Text = "🏷️ Apply Quick Discount", Size = new Size(350, 400), StartPosition = FormStartPosition.CenterParent, FormBorderStyle = FormBorderStyle.FixedDialog };
-            var lblTitle = new Label { Text = $"Discount for: {product.Name}", Location = new Point(20, 20), AutoSize = true, Font = new Font("Segoe UI", 10F, FontStyle.Bold) };
-            
-            var lblPrice = new Label { Text = "Discount Price:", Location = new Point(20, 60), AutoSize = true };
-            var numPrice = new NumericUpDown { Location = new Point(20, 85), Width = 280, Minimum = 0, Maximum = 1000000, Value = product.DiscountPrice ?? product.Price * 0.9m };
-            
-            var lblDuration = new Label { Text = "Duration:", Location = new Point(20, 130), AutoSize = true };
-            var cmbDuration = new ComboBox { Location = new Point(20, 155), Width = 280, DropDownStyle = ComboBoxStyle.DropDownList };
-            cmbDuration.Items.AddRange(new object[] { "1 Hour", "4 Hours", "1 Day", "3 Days", "7 Days", "No Expiry", "Remove Discount" });
-            cmbDuration.SelectedIndex = 3; // 3 Days default
-
-            var btnSave = new Button { Text = "💾 Apply Discount", Location = new Point(20, 250), Size = new Size(280, 45), BackColor = Color.FromArgb(46, 125, 50), ForeColor = Color.White, FlatStyle = FlatStyle.Flat };
-            btnSave.Click += (s, ev) => {
-                if (cmbDuration.Text == "Remove Discount") {
-                    product.DiscountPrice = null;
-                    product.DiscountExpiry = null;
-                } else {
-                    product.DiscountPrice = numPrice.Value;
-                    if (cmbDuration.Text == "1 Hour") product.DiscountExpiry = DateTime.Now.AddHours(1);
-                    else if (cmbDuration.Text == "4 Hours") product.DiscountExpiry = DateTime.Now.AddHours(4);
-                    else if (cmbDuration.Text == "1 Day") product.DiscountExpiry = DateTime.Now.AddDays(1);
-                    else if (cmbDuration.Text == "3 Days") product.DiscountExpiry = DateTime.Now.AddDays(3);
-                    else if (cmbDuration.Text == "7 Days") product.DiscountExpiry = DateTime.Now.AddDays(7);
-                    else product.DiscountExpiry = null; // No expiry
-                }
-
-                if (ProductService.UpdateProduct(product)) {
-                    // Automatically post a public announcement for the discount
-                    if (product.DiscountPrice.HasValue) {
-                        try {
-                            using (var conn = DatabaseHelper.GetConnection()) {
-                                conn.Open();
-                                string sql = "INSERT INTO Announcements (Title, Content, CreatedBy) VALUES (@title, @content, @adminId)";
-                                using (var cmd = new SqlCommand(sql, conn)) {
-                                    cmd.Parameters.AddWithValue("@title", "🔥 HOT DISCOUNT!");
-                                    cmd.Parameters.AddWithValue("@content", $"{product.Name} is now {product.DiscountPrice}! Deal ends in: {cmbDuration.Text}. Grab it now!");
-                                    cmd.Parameters.AddWithValue("@adminId", currentAdmin.AdminId);
-                                    cmd.ExecuteNonQuery();
-                                }
-                            }
-                        } catch { /* Silent fail for announcement if DB busy */ }
-                    }
-
-                    MessageBox.Show("✅ Discount applied and announcement broadcasted to users!");
-                    f.Close();
-                    LoadProducts();
-                } else {
-                    MessageBox.Show("❌ Failed to update product.");
-                }
-            };
-
-            f.Controls.AddRange(new Control[] { lblTitle, lblPrice, numPrice, lblDuration, cmbDuration, btnSave });
-            f.ShowDialog();
-        }
-
     }
 }

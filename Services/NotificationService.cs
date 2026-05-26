@@ -26,9 +26,24 @@ namespace E_commerance_System.Services
             catch { return false; }
         }
 
-        public static bool SendReportToAdmin(int? userId, string type, string message)
+        public static bool SendReportToAdmin(int userId, string subject, string message)
         {
-            return SendNotification(null, type, $"Report from User ID {userId}: {message}");
+            try
+            {
+                using (var conn = DatabaseHelper.GetConnection())
+                {
+                    conn.Open();
+                    string query = "INSERT INTO Complaints (UserId, Subject, Message, Status) VALUES (@uid, @sub, @msg, 'Pending')";
+                    using (var cmd = new SqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@uid", userId);
+                        cmd.Parameters.AddWithValue("@sub", subject);
+                        cmd.Parameters.AddWithValue("@msg", message);
+                        return cmd.ExecuteNonQuery() > 0;
+                    }
+                }
+            }
+            catch { return false; }
         }
     }
 }

@@ -19,11 +19,44 @@ namespace E_commerance_System.Forms
         private readonly Color LightBg = Color.FromArgb(245, 245, 250);
         private readonly Color CardBg = Color.White;
 
-        public FormLogin() { InitializeComponent(); }
+        public FormLogin() 
+        { 
+            InitializeComponent(); 
+            AddForgotPasswordLink();
+        }
+
+        private void AddForgotPasswordLink()
+        {
+            var lnkForgot = new LinkLabel
+            {
+                Text = "Forgot Password?",
+                Location = new Point(50, 420), // Positioned below login fields/buttons
+                AutoSize = true,
+                Font = new Font("Segoe UI", 9F, FontStyle.Regular),
+                LinkColor = PrimaryColor,
+                ActiveLinkColor = AccentColor,
+                Cursor = Cursors.Hand
+            };
+            lnkForgot.LinkClicked += (s, e) =>
+            {
+                var forgotForm = new FormForgotPassword();
+                forgotForm.ShowDialog(this);
+            };
+            this.Controls.Add(lnkForgot);
+            lnkForgot.BringToFront();
+        }
 
         private void LnkRegister_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            new FormRegister().ShowDialog(this);
+            var reg = new FormRegister();
+            if (reg.ShowDialog(this) == DialogResult.OK)
+            {
+                txtUsername.Text = reg.RegisteredUsername;
+                txtPassword.Text = reg.RegisteredPassword;
+                lblStatus.Text = "✨ Registration successful! Logging in...";
+                lblStatus.ForeColor = AccentColor;
+                BtnLogin_Click(null, null); // Automatically trigger login
+            }
         }
 
         private void PnlHeader_Paint(object sender, PaintEventArgs e)
@@ -70,8 +103,14 @@ namespace E_commerance_System.Forms
                             string userMessage = ShowInputDialog("Create Support Report", "Please describe your issue:");
                             if (!string.IsNullOrWhiteSpace(userMessage))
                             {
-                                NotificationService.SendReportToAdmin(user.UserId, "Deactivated Account Issue", $"User '{user.Username}' says: {userMessage}");
-                                MessageBox.Show("✅ Your report has been sent to the admin! Please wait for review.", "Report Sent");
+                                if (NotificationService.SendReportToAdmin(user.UserId, "Deactivated Account Issue", $"User '{user.Username}' says: {userMessage}"))
+                                {
+                                    MessageBox.Show("✅ Your report has been sent to the admin! Please wait for review.", "Report Sent");
+                                }
+                                else
+                                {
+                                    MessageBox.Show("❌ Failed to send report. Please try again later.", "Error");
+                                }
                             }
                         }
                         lblStatus.Text = "❌ Account deactivated.";

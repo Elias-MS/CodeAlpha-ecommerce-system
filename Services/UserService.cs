@@ -357,6 +357,49 @@ namespace E_commerance_System.Services
             return null;
         }
 
+        public static int GetUserIdByEmail(string email)
+        {
+            using (var connection = DatabaseHelper.GetConnection())
+            {
+                connection.Open();
+                string query = "SELECT UserId FROM Users WHERE Email = @email AND IsActive = 1";
+                using (var cmd = new SqlCommand(query, connection))
+                {
+                    cmd.Parameters.AddWithValue("@email", email);
+                    var result = cmd.ExecuteScalar();
+                    if (result != null && result != DBNull.Value)
+                    {
+                        return Convert.ToInt32(result);
+                    }
+                }
+            }
+            return 0;
+        }
+
+        public static bool ResetPasswordDirect(int userId, string newPassword)
+        {
+            try
+            {
+                var passwordValidation = SecurityHelper.ValidatePasswordStrength(newPassword);
+                if (!passwordValidation.IsValid) return false;
+
+                var hashResult = SecurityHelper.HashPassword(newPassword);
+                using (var connection = DatabaseHelper.GetConnection())
+                {
+                    connection.Open();
+                    string query = "UPDATE Users SET PasswordHash = @hash, Salt = @salt, UpdatedDate = GETDATE() WHERE UserId = @userId AND IsActive = 1";
+                    using (var cmd = new SqlCommand(query, connection))
+                    {
+                        cmd.Parameters.AddWithValue("@hash", hashResult.Item1);
+                        cmd.Parameters.AddWithValue("@salt", hashResult.Item2);
+                        cmd.Parameters.AddWithValue("@userId", userId);
+                        return cmd.ExecuteNonQuery() > 0;
+                    }
+                }
+            }
+            catch { return false; }
+        }
+
         public static List<User> GetAllUsers()
         {
             var users = new List<User>();
@@ -382,7 +425,8 @@ namespace E_commerance_System.Services
                             IsActive = Convert.ToBoolean(reader["IsActive"]),
                             IsEmailVerified = Convert.ToBoolean(reader["IsEmailVerified"]),
                             LastLoginDate = reader["LastLoginDate"] as DateTime?,
-                            CreatedDate = Convert.ToDateTime(reader["CreatedDate"])
+                            CreatedDate = Convert.ToDateTime(reader["CreatedDate"]),
+                            PreferredCurrency = reader["PreferredCurrency"]?.ToString() ?? "ETB"
                         });
                     }
                 }

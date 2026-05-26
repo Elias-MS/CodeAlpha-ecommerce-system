@@ -21,25 +21,25 @@ namespace E_commerance_System.Forms
 
         private void InitializeComponent()
         {
-            this.Text = "🚩 Submit a Complaint";
-            this.Size = new Size(400, 450);
+            this.Text = "❓ Get Help / Ask a Question";
+            this.Size = new Size(450, 500);
             this.StartPosition = FormStartPosition.CenterParent;
             this.FormBorderStyle = FormBorderStyle.FixedDialog;
             this.BackColor = Color.White;
 
-            var lblHeader = new Label { Text = "What's the issue?", Font = new Font("Segoe UI", 14F, FontStyle.Bold), Location = new Point(20, 20), AutoSize = true };
+            var lblHeader = new Label { Text = "How can we help you today?", Font = new Font("Segoe UI", 14F, FontStyle.Bold), Location = new Point(20, 20), AutoSize = true };
             
-            var lblSub = new Label { Text = "Subject:", Location = new Point(20, 70), AutoSize = true };
-            txtSubject = new TextBox { Location = new Point(20, 95), Width = 340, Font = new Font("Segoe UI", 10F) };
+            var lblSub = new Label { Text = "Subject / Topic:", Location = new Point(20, 70), AutoSize = true };
+            txtSubject = new TextBox { Location = new Point(20, 95), Width = 390, Font = new Font("Segoe UI", 10F) };
             
-            var lblMsg = new Label { Text = "Details:", Location = new Point(20, 140), AutoSize = true };
-            txtMessage = new TextBox { Location = new Point(20, 165), Width = 340, Height = 150, Multiline = true, Font = new Font("Segoe UI", 10F) };
+            var lblMsg = new Label { Text = "Message Details:", Location = new Point(20, 140), AutoSize = true };
+            txtMessage = new TextBox { Location = new Point(20, 165), Width = 390, Height = 180, Multiline = true, Font = new Font("Segoe UI", 10F) };
             
             btnSubmit = new Button { 
-                Text = "📤 Submit Complaint", 
-                Location = new Point(20, 340), 
-                Size = new Size(340, 45), 
-                BackColor = Color.FromArgb(198, 40, 40), 
+                Text = "🚀 Send Message", 
+                Location = new Point(20, 370), 
+                Size = new Size(390, 50), 
+                BackColor = Color.FromArgb(0, 121, 107), 
                 ForeColor = Color.White, 
                 FlatStyle = FlatStyle.Flat,
                 Font = new Font("Segoe UI", 10F, FontStyle.Bold)
@@ -72,7 +72,7 @@ namespace E_commerance_System.Forms
                         cmd.ExecuteNonQuery();
                     }
                 }
-                MessageBox.Show("✅ Your complaint has been sent to the admin. We will review it shortly.");
+                MessageBox.Show("✅ Your message has been sent to the admin. You can track our response in 'My Support History'.");
                 this.Close();
             }
             catch (Exception ex) { MessageBox.Show("Error: " + ex.Message); }

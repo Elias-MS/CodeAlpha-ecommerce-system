@@ -37,6 +37,7 @@ namespace E_commerance_System.Forms
             this.lblEst = new System.Windows.Forms.Label();
             this.dtpDeliveryDate = new System.Windows.Forms.DateTimePicker();
             this.btnBrowseProof = new System.Windows.Forms.Button();
+            this.btnClearPayment = new System.Windows.Forms.Button();
             this.lblProofPath = new System.Windows.Forms.Label();
             this.btnPlaceOrder = new System.Windows.Forms.Button();
             this.pnlHeader.SuspendLayout();
@@ -140,6 +141,7 @@ namespace E_commerance_System.Forms
             this.pnlSummary.Controls.Add(this.lblEst);
             this.pnlSummary.Controls.Add(this.dtpDeliveryDate);
             this.pnlSummary.Controls.Add(this.btnBrowseProof);
+            this.pnlSummary.Controls.Add(this.btnClearPayment);
             this.pnlSummary.Controls.Add(this.lblProofPath);
             this.pnlSummary.Controls.Add(this.btnPlaceOrder);
             this.pnlSummary.Location = new System.Drawing.Point(20, 415);
@@ -284,6 +286,7 @@ namespace E_commerance_System.Forms
             this.dtpDeliveryDate.Size = new System.Drawing.Size(350, 30);
             this.dtpDeliveryDate.TabIndex = 13;
             // 
+            // 
             // btnBrowseProof
             // 
             this.btnBrowseProof.BackColor = System.Drawing.Color.FromArgb(100, 100, 120);
@@ -293,18 +296,33 @@ namespace E_commerance_System.Forms
             this.btnBrowseProof.ForeColor = System.Drawing.Color.White;
             this.btnBrowseProof.Location = new System.Drawing.Point(420, 260);
             this.btnBrowseProof.Name = "btnBrowseProof";
-            this.btnBrowseProof.Size = new System.Drawing.Size(220, 30);
+            this.btnBrowseProof.Size = new System.Drawing.Size(180, 30);
             this.btnBrowseProof.TabIndex = 14;
-            this.btnBrowseProof.Text = "📸 Attach Payment Proof";
+            this.btnBrowseProof.Text = "📸 Attach Proof";
             this.btnBrowseProof.UseVisualStyleBackColor = false;
             this.btnBrowseProof.Click += new System.EventHandler(this.BtnBrowseProof_Click);
+            // 
+            // btnClearPayment
+            // 
+            this.btnClearPayment.BackColor = System.Drawing.Color.FromArgb(120, 120, 140);
+            this.btnClearPayment.FlatAppearance.BorderSize = 0;
+            this.btnClearPayment.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnClearPayment.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            this.btnClearPayment.ForeColor = System.Drawing.Color.White;
+            this.btnClearPayment.Location = new System.Drawing.Point(610, 260);
+            this.btnClearPayment.Name = "btnClearPayment";
+            this.btnClearPayment.Size = new System.Drawing.Size(80, 30);
+            this.btnClearPayment.TabIndex = 17;
+            this.btnClearPayment.Text = "🧹 Clear";
+            this.btnClearPayment.UseVisualStyleBackColor = false;
+            this.btnClearPayment.Click += new System.EventHandler(this.BtnClearPayment_Click);
             // 
             // lblProofPath
             // 
             this.lblProofPath.AutoSize = true;
             this.lblProofPath.Font = new System.Drawing.Font("Segoe UI", 8.5F, System.Drawing.FontStyle.Italic);
             this.lblProofPath.ForeColor = System.Drawing.Color.Gray;
-            this.lblProofPath.Location = new System.Drawing.Point(650, 265);
+            this.lblProofPath.Location = new System.Drawing.Point(700, 265);
             this.lblProofPath.Name = "lblProofPath";
             this.lblProofPath.Size = new System.Drawing.Size(107, 20);
             this.lblProofPath.TabIndex = 15;
@@ -376,5 +394,6 @@ namespace E_commerance_System.Forms
         private System.Windows.Forms.Button btnBrowseProof;
         private System.Windows.Forms.Label lblProofPath;
         private System.Windows.Forms.Button btnPlaceOrder;
+        private System.Windows.Forms.Button btnClearPayment;
     }
 }

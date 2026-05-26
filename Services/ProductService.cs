@@ -98,7 +98,9 @@ namespace E_commerance_System.Services
                 DiscountPrice = reader["DiscountPrice"] == DBNull.Value ? null : (decimal?)Convert.ToDecimal(reader["DiscountPrice"]),
                 DiscountExpiry = reader["DiscountExpiry"] == DBNull.Value ? null : (DateTime?)Convert.ToDateTime(reader["DiscountExpiry"]),
                 IsFeatured = Convert.ToBoolean(reader["IsFeatured"]),
-                IsActive = Convert.ToBoolean(reader["IsActive"])
+                IsActive = Convert.ToBoolean(reader["IsActive"]),
+                Color = reader["Color"]?.ToString(),
+                Size = reader["Size"]?.ToString()
             };
 
             // Resolve relative path to absolute path
@@ -226,6 +228,21 @@ namespace E_commerance_System.Services
                 using (var connection = DatabaseHelper.GetConnection()) {
                     connection.Open();
                     string query = "UPDATE Products SET IsActive = 0 WHERE ProductId = @id";
+                    using (var cmd = new SqlCommand(query, connection)) {
+                        cmd.Parameters.AddWithValue("@id", productId);
+                        return cmd.ExecuteNonQuery() > 0;
+                    }
+                }
+            } catch { return false; }
+        }
+
+        public static bool PermanentDeleteProduct(int productId)
+        {
+            try {
+                using (var connection = DatabaseHelper.GetConnection()) {
+                    connection.Open();
+                    // Try to delete. This will fail if there are foreign key constraints (e.g. in OrderItems)
+                    string query = "DELETE FROM Products WHERE ProductId = @id";
                     using (var cmd = new SqlCommand(query, connection)) {
                         cmd.Parameters.AddWithValue("@id", productId);
                         return cmd.ExecuteNonQuery() > 0;

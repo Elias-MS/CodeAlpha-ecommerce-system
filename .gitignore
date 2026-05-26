@@ -64,3 +64,8 @@ dotnet-dev-certs.pfx
 
 # Others
 .DS_Store
+
+# Logs and scratch
+error.log
+output.log
+scratch/

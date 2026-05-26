@@ -241,6 +241,49 @@ namespace E_commerance_System.Services
             return null;
         }
 
+        public static int GetAdminIdByEmail(string email)
+        {
+            using (var connection = DatabaseHelper.GetConnection())
+            {
+                connection.Open();
+                string query = "SELECT AdminId FROM Admins WHERE Email = @email AND IsActive = 1";
+                using (var cmd = new SqlCommand(query, connection))
+                {
+                    cmd.Parameters.AddWithValue("@email", email);
+                    var result = cmd.ExecuteScalar();
+                    if (result != null && result != DBNull.Value)
+                    {
+                        return Convert.ToInt32(result);
+                    }
+                }
+            }
+            return 0;
+        }
+
+        public static bool ResetAdminPasswordDirect(int adminId, string newPassword)
+        {
+            try
+            {
+                var passwordValidation = SecurityHelper.ValidatePasswordStrength(newPassword);
+                if (!passwordValidation.IsValid) return false;
+
+                var hashResult = SecurityHelper.HashPassword(newPassword);
+                using (var connection = DatabaseHelper.GetConnection())
+                {
+                    connection.Open();
+                    string query = "UPDATE Admins SET PasswordHash = @hash, Salt = @salt WHERE AdminId = @adminId";
+                    using (var cmd = new SqlCommand(query, connection))
+                    {
+                        cmd.Parameters.AddWithValue("@hash", hashResult.Item1);
+                        cmd.Parameters.AddWithValue("@salt", hashResult.Item2);
+                        cmd.Parameters.AddWithValue("@adminId", adminId);
+                        return cmd.ExecuteNonQuery() > 0;
+                    }
+                }
+            }
+            catch { return false; }
+        }
+
         public static List<Admin> GetAllAdmins()
         {
             var admins = new List<Admin>();

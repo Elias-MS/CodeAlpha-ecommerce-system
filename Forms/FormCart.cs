@@ -67,6 +67,9 @@ namespace E_commerance_System.Forms
             cmbBankList.Visible = false;
             lblTID.Visible = false;
             txtTransactionId.Visible = false;
+            if (btnBrowseProof != null) btnBrowseProof.Visible = false;
+            if (lblProofPath != null) lblProofPath.Visible = false;
+            if (btnClearPayment != null) btnClearPayment.Visible = false;
 
             if (method == "Cash on Delivery")
             {
@@ -81,6 +84,9 @@ namespace E_commerance_System.Forms
                 lblTID.Text = "🏦 Transaction ID / Ref:";
                 lblTID.Location = new Point(420, 195);
                 txtTransactionId.Location = new Point(420, 218);
+                if (btnBrowseProof != null) btnBrowseProof.Visible = true;
+                if (lblProofPath != null) lblProofPath.Visible = true;
+                if (btnClearPayment != null) btnClearPayment.Visible = true;
             }
             else if (method == "Telebirr" || method == "M-Pesa")
             {
@@ -89,6 +95,9 @@ namespace E_commerance_System.Forms
                 lblTID.Text = "📱 Transaction Reference Number:";
                 lblTID.Location = new Point(420, 135);
                 txtTransactionId.Location = new Point(420, 158);
+                if (btnBrowseProof != null) btnBrowseProof.Visible = true;
+                if (lblProofPath != null) lblProofPath.Visible = true;
+                if (btnClearPayment != null) btnClearPayment.Visible = true;
             }
         }
 
@@ -168,9 +177,44 @@ namespace E_commerance_System.Forms
             // Digital payment specific validation
             if (isDigitalPayment)
             {
-                if (string.IsNullOrWhiteSpace(txtTransactionId.Text))
+                string tid = txtTransactionId.Text.Trim();
+                if (string.IsNullOrWhiteSpace(tid))
                 {
                     MessageBox.Show("⚠️ Please enter your Transaction Reference Number.", "Payment Required", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    txtTransactionId.Focus();
+                    return;
+                }
+
+                // Check for validity: minimum length of 5 and alphanumeric/dashes/underscores only
+                bool isValidTid = tid.Length >= 5;
+                if (isValidTid)
+                {
+                    foreach (char c in tid)
+                    {
+                        if (!char.IsLetterOrDigit(c) && c != '-' && c != '_')
+                        {
+                            isValidTid = false;
+                            break;
+                        }
+                    }
+                }
+
+                if (!isValidTid)
+                {
+                    var response = MessageBox.Show(
+                        "⚠️ The Transaction Reference Number seems to contain invalid characters or is too short.\n" +
+                        "It must be at least 5 characters and contain only letters, numbers, dashes (-), or underscores (_).\n\n" +
+                        "Would you like to clear the payment fields to re-enter?", 
+                        "Invalid Payment Information", 
+                        MessageBoxButtons.YesNo, 
+                        MessageBoxIcon.Warning
+                    );
+                    
+                    if (response == DialogResult.Yes)
+                    {
+                        ClearPaymentFields();
+                    }
+                    txtTransactionId.Focus();
                     return;
                 }
 
@@ -237,12 +281,43 @@ namespace E_commerance_System.Forms
                         string directory = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Proofs");
                         if (!System.IO.Directory.Exists(directory)) System.IO.Directory.CreateDirectory(directory);
 
+                        // Find project root to save fallback proofs (survives Clean/Rebuild)
+                        string projRoot = "";
+                        string dir = AppDomain.CurrentDomain.BaseDirectory;
+                        while (!string.IsNullOrEmpty(dir))
+                        {
+                            if (System.IO.Directory.GetFiles(dir, "*.csproj").Length > 0)
+                            {
+                                projRoot = dir;
+                                break;
+                            }
+                            dir = System.IO.Path.GetDirectoryName(dir);
+                        }
+                        if (string.IsNullOrEmpty(projRoot))
+                            projRoot = @"c:\Users\User\source\Assginments\E-commerance System";
+
+                        string projProofsDir = System.IO.Path.Combine(projRoot, "Proofs");
+                        if (!System.IO.Directory.Exists(projProofsDir))
+                        {
+                            try { System.IO.Directory.CreateDirectory(projProofsDir); } catch { }
+                        }
+
                         var savedPaths = new System.Collections.Generic.List<string>();
                         foreach (string file in ofd.FileNames)
                         {
                             string fileName = $"Proof_{Guid.NewGuid().ToString().Substring(0, 8)}_{DateTime.Now:yyyyMMdd_HHmmss}{System.IO.Path.GetExtension(file)}";
                             string destPath = System.IO.Path.Combine(directory, fileName);
                             System.IO.File.Copy(file, destPath, true);
+
+                            // Copy to project root fallback folder
+                            if (System.IO.Directory.Exists(projProofsDir))
+                            {
+                                try {
+                                    string projDestPath = System.IO.Path.Combine(projProofsDir, fileName);
+                                    System.IO.File.Copy(file, projDestPath, true);
+                                } catch { }
+                            }
+
                             savedPaths.Add(fileName); // Save ONLY the filename
                         }
                         selectedProofPath = string.Join(";", savedPaths);
@@ -254,6 +329,25 @@ namespace E_commerance_System.Forms
                     catch (Exception ex) { MessageBox.Show("Error: " + ex.Message); }
                 }
             }
+        }
+
+        private void ClearPaymentFields()
+        {
+            txtTransactionId.Text = "";
+            selectedProofPath = "";
+            lblProofPath.Text = "No file selected";
+            lblProofPath.ForeColor = Color.Gray;
+            btnBrowseProof.Text = "📸 Attach Proof";
+            btnBrowseProof.BackColor = Color.FromArgb(100, 100, 120);
+            
+            if (cmbBankList.Items.Count > 0)
+                cmbBankList.SelectedIndex = 0;
+        }
+
+        private void BtnClearPayment_Click(object sender, EventArgs e)
+        {
+            ClearPaymentFields();
+            MessageBox.Show("🧹 Payment details and attached proof have been cleared.", "Payment Cleared", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
     }
 }

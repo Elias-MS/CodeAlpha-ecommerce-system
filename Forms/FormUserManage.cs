@@ -35,9 +35,10 @@ namespace E_commerance_System.Forms
                 dt.Columns.Add("Username", typeof(string));
                 dt.Columns.Add("Full Name", typeof(string));
                 dt.Columns.Add("Email", typeof(string));
+                dt.Columns.Add("Currency", typeof(string));
                 dt.Columns.Add("Status", typeof(string));
 
-                foreach (var u in users) dt.Rows.Add(u.UserId, u.Username, $"{u.FirstName} {u.LastName}", u.Email, u.IsActive ? "Active" : "Inactive");
+                foreach (var u in users) dt.Rows.Add(u.UserId, u.Username, $"{u.FirstName} {u.LastName}", u.Email, u.PreferredCurrency, u.IsActive ? "Active" : "Inactive");
                 dgvUsers.DataSource = dt;
             }
             catch (Exception ex) { MessageBox.Show(ex.Message); }

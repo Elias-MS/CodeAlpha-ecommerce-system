@@ -97,6 +97,26 @@ namespace E_commerance_System.Services
             catch { return false; }
         }
 
+        public static bool AddCurrency(string code, decimal rate, string symbol)
+        {
+            try
+            {
+                using (var connection = DatabaseHelper.GetConnection())
+                {
+                    connection.Open();
+                    string query = "INSERT INTO CurrencyRates (CurrencyCode, RateToETB, Symbol, LastUpdated) VALUES (@code, @rate, @symbol, GETDATE())";
+                    using (var cmd = new SqlCommand(query, connection))
+                    {
+                        cmd.Parameters.AddWithValue("@code", code);
+                        cmd.Parameters.AddWithValue("@rate", rate);
+                        cmd.Parameters.AddWithValue("@symbol", symbol);
+                        return cmd.ExecuteNonQuery() > 0;
+                    }
+                }
+            }
+            catch { return false; }
+        }
+
         public static decimal ConvertAmount(decimal amountInETB, string targetCurrency)
         {
             if (targetCurrency == "ETB") return amountInETB;

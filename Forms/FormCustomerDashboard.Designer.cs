@@ -30,8 +30,6 @@ namespace E_commerance_System.Forms
             this.lblSrch = new System.Windows.Forms.Label();
             this.txtSearch = new System.Windows.Forms.TextBox();
             this.btnSearch = new System.Windows.Forms.Button();
-            this.btnProfile = new System.Windows.Forms.Button();
-            this.btnShowAll = new System.Windows.Forms.Button();
             this.dgvProducts = new System.Windows.Forms.DataGridView();
             this.pnlBottom = new System.Windows.Forms.Panel();
             this.lblProductInfo = new System.Windows.Forms.Label();
@@ -172,8 +170,6 @@ namespace E_commerance_System.Forms
             this.pnlSearch.Controls.Add(this.lblSrch);
             this.pnlSearch.Controls.Add(this.txtSearch);
             this.pnlSearch.Controls.Add(this.btnSearch);
-            this.pnlSearch.Controls.Add(this.btnProfile);
-            this.pnlSearch.Controls.Add(this.btnShowAll);
             this.pnlSearch.Location = new System.Drawing.Point(0, 65);
             this.pnlSearch.Name = "pnlSearch";
             this.pnlSearch.Size = new System.Drawing.Size(1164, 55);
@@ -230,33 +226,6 @@ namespace E_commerance_System.Forms
             this.btnSearch.UseVisualStyleBackColor = false;
             this.btnSearch.Click += new System.EventHandler(this.BtnSearch_Click);
             // 
-            // btnProfile
-            // 
-            this.btnProfile.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(63)))), ((int)(((byte)(81)))), ((int)(((byte)(181)))));
-            this.btnProfile.FlatAppearance.BorderSize = 0;
-            this.btnProfile.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnProfile.ForeColor = System.Drawing.Color.White;
-            this.btnProfile.Location = new System.Drawing.Point(730, 10);
-            this.btnProfile.Name = "btnProfile";
-            this.btnProfile.Size = new System.Drawing.Size(100, 35);
-            this.btnProfile.TabIndex = 5;
-            this.btnProfile.Text = "👤 Profile";
-            this.btnProfile.UseVisualStyleBackColor = false;
-            this.btnProfile.Click += new System.EventHandler(this.BtnProfile_Click);
-            // 
-            // btnShowAll
-            // 
-            this.btnShowAll.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(100)))), ((int)(((byte)(120)))));
-            this.btnShowAll.FlatAppearance.BorderSize = 0;
-            this.btnShowAll.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnShowAll.ForeColor = System.Drawing.Color.White;
-            this.btnShowAll.Location = new System.Drawing.Point(840, 10);
-            this.btnShowAll.Name = "btnShowAll";
-            this.btnShowAll.Size = new System.Drawing.Size(90, 35);
-            this.btnShowAll.TabIndex = 6;
-            this.btnShowAll.Text = "Show All";
-            this.btnShowAll.UseVisualStyleBackColor = false;
-            this.btnShowAll.Click += new System.EventHandler(this.BtnShowAll_Click);
             // 
             // dgvProducts
             // 
@@ -398,8 +367,6 @@ namespace E_commerance_System.Forms
         private System.Windows.Forms.Label lblSrch;
         private System.Windows.Forms.TextBox txtSearch;
         private System.Windows.Forms.Button btnSearch;
-        private System.Windows.Forms.Button btnProfile;
-        private System.Windows.Forms.Button btnShowAll;
         private System.Windows.Forms.DataGridView dgvProducts;
         private System.Windows.Forms.Panel pnlBottom;
         private System.Windows.Forms.Label lblProductInfo;

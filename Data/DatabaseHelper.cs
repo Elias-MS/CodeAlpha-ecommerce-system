@@ -11,8 +11,16 @@ namespace E_commerance_System.Data
     public class DatabaseHelper
     {
         public static string ConnectionString => connectionString;
-        private static string connectionString = ConfigurationManager.ConnectionStrings["ECommerceDB"]?.ConnectionString
-            ?? @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\User\OneDrive\Documents\ECommerceDB.mdf;Integrated Security=True;Connect Timeout=30";
+        private static string connectionString = GetDynamicConnectionString();
+
+        private static string GetDynamicConnectionString()
+        {
+            string configStr = ConfigurationManager.ConnectionStrings["ECommerceDB"]?.ConnectionString;
+            if (!string.IsNullOrEmpty(configStr)) return configStr;
+
+            // Absolute fallback as requested
+            return @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\User\source\Assginments\E-commerance System\Database\ECommerceDB.mdf;Integrated Security=True;Connect Timeout=30";
+        }
 
         public static void InitializeDatabase()
         {
@@ -338,6 +346,8 @@ namespace E_commerance_System.Data
                 "IF OBJECT_ID('Announcements', 'U') IS NULL CREATE TABLE Announcements (AnnouncementId INT IDENTITY(1,1) PRIMARY KEY, Title NVARCHAR(200) NOT NULL, Content NVARCHAR(MAX) NOT NULL, IsActive BIT DEFAULT 1, CreatedBy INT NULL, CreatedDate DATETIME DEFAULT GETDATE());",
                 "IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('Announcements') AND name = 'CreatedBy') ALTER TABLE Announcements ADD CreatedBy INT NULL;",
                 "IF OBJECT_ID('Complaints', 'U') IS NULL CREATE TABLE Complaints (ComplaintId INT IDENTITY(1,1) PRIMARY KEY, UserId INT NOT NULL, Subject NVARCHAR(200) NOT NULL, Message NVARCHAR(MAX) NOT NULL, Status NVARCHAR(50) DEFAULT 'Pending', CreatedDate DATETIME DEFAULT GETDATE(), FOREIGN KEY (UserId) REFERENCES Users(UserId));",
+                "IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('Complaints') AND name = 'AdminReply') ALTER TABLE Complaints ADD AdminReply NVARCHAR(MAX) NULL;",
+                "IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('Complaints') AND name = 'ReplyDate') ALTER TABLE Complaints ADD ReplyDate DATETIME NULL;",
                 "IF OBJECT_ID('Reviews', 'U') IS NULL CREATE TABLE Reviews (ReviewId INT IDENTITY(1,1) PRIMARY KEY, ProductId INT NOT NULL, UserId INT NOT NULL, OrderId INT NULL, Rating INT NOT NULL CHECK (Rating >= 1 AND Rating <= 5), Title NVARCHAR(200), Comment NVARCHAR(1000), IsVerifiedPurchase BIT DEFAULT 0, IsApproved BIT DEFAULT 0, HelpfulCount INT DEFAULT 0, CreatedDate DATETIME DEFAULT GETDATE());",
                 "IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('Reviews') AND name = 'IsApproved') ALTER TABLE Reviews ADD IsApproved BIT DEFAULT 0;",
                 "IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('Users') AND name = 'PreferredCurrency') ALTER TABLE Users ADD PreferredCurrency NVARCHAR(10) DEFAULT 'ETB';",

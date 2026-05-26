@@ -45,13 +45,35 @@ namespace E_commerance_System.Forms
 
             // Row 1: Navigation & Logo
             var pnlNav = new Panel { Dock = DockStyle.Top, Height = 60, BackColor = Color.FromArgb(18, 18, 24) };
-            var lblLogo = new Label { Text = "🛒 ELITE STORE", ForeColor = Color.FromArgb(0, 150, 136), Font = new Font("Segoe UI", 16F, FontStyle.Bold), Location = new Point(20, 15), AutoSize = true };
+            var lblLogo = new Label { Text = "🛒 SPEED STORE", ForeColor = Color.FromArgb(0, 150, 136), Font = new Font("Segoe UI", 16F, FontStyle.Bold), Location = new Point(20, 15), AutoSize = true };
+            
+            var lblWelcome = new Label { 
+                Text = currentUser.UserId == 0 ? "Welcome, Guest" : $"Welcome, {currentUser.FullName}", 
+                ForeColor = Color.White, Font = new Font("Segoe UI", 10F, FontStyle.Italic), 
+                Location = new Point(200, 20), AutoSize = true, BackColor = Color.Transparent 
+            };
+            pnlNav.Controls.Add(lblWelcome);
             pnlNav.Controls.Add(lblLogo);
 
-            var flpNavButtons = new FlowLayoutPanel { Location = new Point(200, 0), Size = new Size(1000, 60), FlowDirection = FlowDirection.LeftToRight };
+            var flpNavButtons = new FlowLayoutPanel { Location = new Point(320, 0), Size = new Size(950, 60), FlowDirection = FlowDirection.LeftToRight };
+            
+            var lblCurr = new Label { Text = "CURRENCY:", ForeColor = Color.Gray, Font = new Font("Segoe UI", 9F, FontStyle.Bold), Margin = new Padding(0, 20, 5, 0), AutoSize = true };
+            cmbCurrency.Width = 80;
+            cmbCurrency.BackColor = Color.FromArgb(30, 30, 35);
+            cmbCurrency.ForeColor = Color.White;
+            cmbCurrency.FlatStyle = FlatStyle.Flat;
+            cmbCurrency.Margin = new Padding(0, 16, 20, 0);
+
+            flpNavButtons.Controls.Add(lblCurr);
+            flpNavButtons.Controls.Add(cmbCurrency);
+
             CreateTopNavButton(flpNavButtons, "🏠 Home", (s, e) => LoadProducts());
             CreateTopNavButton(flpNavButtons, "❤️ Wishlist", BtnWishlist_Click);
             CreateTopNavButton(flpNavButtons, "📋 My Orders", BtnOrders_Click);
+            CreateTopNavButton(flpNavButtons, "💬 Support", (s, e) => {
+                if (currentUser.UserId == 0) MessageBox.Show("Please login to see your support history.");
+                else new FormSupportHistory(currentUser).ShowDialog();
+            });
             CreateTopNavButton(flpNavButtons, "👤 Profile", BtnProfile_Click);
             CreateTopNavButton(flpNavButtons, "🚪 Logout", BtnLogout_Click);
             pnlNav.Controls.Add(flpNavButtons);
@@ -73,9 +95,6 @@ namespace E_commerance_System.Forms
             
             btnSearch.Location = new Point(670, 18);
             btnSearch.Size = new Size(110, 35);
-            
-            btnProfile.Visible = false; // Resolved: Removed duplicate profile button to fix overlap
-            btnShowAll.Visible = false; // Resolved: Removed duplicate show all button
             
             btnCart.Location = new Point(1050, 15);
             btnCart.Size = new Size(160, 40);
@@ -128,7 +147,7 @@ namespace E_commerance_System.Forms
                 Font = new Font("Segoe UI", 8.5F, FontStyle.Italic)
             };
             var lblComplaint = new LinkLabel { 
-                Text = "🚩 Have a Problem? Submit a Complaint", 
+                Text = "❓ Have a Question or Problem? Ask Us Anything", 
                 Location = new Point(20, 60), 
                 AutoSize = true, 
                 LinkColor = Color.FromArgb(198, 40, 40),
@@ -136,8 +155,8 @@ namespace E_commerance_System.Forms
                 ActiveLinkColor = Color.Red,
                 VisitedLinkColor = Color.FromArgb(198, 40, 40)
             };
-            lblComplaint.Click += (s, e) => {
-                if (currentUser.UserId == 0) MessageBox.Show("Please login to submit a complaint.");
+            lblComplaint.LinkClicked += (s, e) => {
+                if (currentUser == null || currentUser.UserId == 0) MessageBox.Show("Please login to send a support request.");
                 else new FormComplaint(currentUser).ShowDialog();
             };
             pnlBottom.Controls.Add(lblComplaint);
@@ -181,7 +200,7 @@ namespace E_commerance_System.Forms
         {
             var btn = new Button {
                 Text = text,
-                Width = 140,
+                Width = 115,
                 Height = 60,
                 FlatStyle = FlatStyle.Flat,
                 ForeColor = Color.White,
@@ -209,7 +228,7 @@ namespace E_commerance_System.Forms
                     {
                         var result = cmd.ExecuteScalar();
                         if (result != null) lblTicker.Text = "🌟 NEWS: " + result.ToString() + "          |          Happy Shopping! 🛍️";
-                        else lblTicker.Text = "🌟 Welcome to E-Commerce Elite! Check back here for latest deals and announcements. 🌟";
+                        else lblTicker.Text = "🌟 Welcome to E-Commerce Speed! Check back here for latest deals and announcements. 🌟";
                     }
                 }
             }

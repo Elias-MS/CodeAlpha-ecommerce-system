@@ -70,6 +70,7 @@
     <Compile Include="Services\ProductService.cs" />
     <Compile Include="Services\ShoppingCartService.cs" />
     <Compile Include="Services\UserService.cs" />
+    <Compile Include="Services\EmailService.cs" />
     <Compile Include="Services\NotificationService.cs" />
     <Compile Include="Services\WishlistService.cs" />
     <Compile Include="Utils\SecurityHelper.cs" />
@@ -130,39 +131,13 @@
     <Compile Include="Forms\FormForgotPassword.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\FormForgotPassword.Designer.cs">
-      <DependentUpon>FormForgotPassword.cs</DependentUpon>
-    </Compile>
     <Compile Include="Forms\FormCustomerProfile.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\FormCustomerProfile.Designer.cs">
       <DependentUpon>FormCustomerProfile.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\FormUserManage.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\FormUserManage.Designer.cs">
-      <DependentUpon>FormUserManage.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\FormInventoryManage.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\FormInventoryManage.Designer.cs">
-      <DependentUpon>FormInventoryManage.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\FormReports.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\FormReports.Designer.cs">
-      <DependentUpon>FormReports.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\FormAddStock.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\FormAddStock.Designer.cs">
-      <DependentUpon>FormAddStock.cs</DependentUpon>
-    </Compile>
+
     <Compile Include="Forms\FormNotifications.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -202,9 +177,10 @@
     <Compile Include="Forms\FormComplaint.cs">
       <SubType>Form</SubType>
     </Compile>
-    <EmbeddedResource Include="Forms\FormAddStock.resx">
-      <DependentUpon>FormAddStock.cs</DependentUpon>
-    </EmbeddedResource>
+    <Compile Include="Forms\FormSupportHistory.cs">
+      <SubType>Form</SubType>
+    </Compile>
+
     <EmbeddedResource Include="Forms\FormAdminDashboard.resx">
       <DependentUpon>FormAdminDashboard.cs</DependentUpon>
     </EmbeddedResource>
