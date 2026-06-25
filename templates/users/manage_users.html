@@ -1,0 +1,447 @@
+{% extends 'base.html' %}
+
+{% block title %}Manage Users - E-Commerce Store{% endblock %}
+
+{% block content %}
+<style>
+    .manage-container {
+        padding: 40px 20px;
+        background: #f8f9fa;
+        min-height: 100vh;
+    }
+    
+    .page-header {
+        background: white;
+        padding: 30px;
+        border-radius: 16px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        margin-bottom: 30px;
+    }
+    
+    .page-title {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #2d3436;
+        margin-bottom: 10px;
+    }
+    
+    .page-subtitle {
+        color: #636e72;
+        font-size: 1.1rem;
+    }
+    
+    .action-buttons {
+        display: flex;
+        gap: 15px;
+        margin-bottom: 30px;
+        flex-wrap: wrap;
+    }
+    
+    .btn-action {
+        padding: 12px 25px;
+        border-radius: 10px;
+        font-weight: 600;
+        border: none;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        text-decoration: none;
+    }
+    
+    .btn-back {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+    }
+    
+    .btn-back:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        color: white;
+    }
+    
+    .search-box {
+        background: white;
+        padding: 20px;
+        border-radius: 16px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        margin-bottom: 30px;
+    }
+    
+    .search-input {
+        width: 100%;
+        padding: 15px 20px;
+        border: 2px solid #dfe6e9;
+        border-radius: 10px;
+        font-size: 1rem;
+    }
+    
+    .search-input:focus {
+        outline: none;
+        border-color: #667eea;
+    }
+    
+    .filter-section {
+        background: white;
+        padding: 20px;
+        border-radius: 16px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        margin-bottom: 30px;
+    }
+    
+    .filter-buttons {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+    
+    .filter-btn {
+        padding: 10px 20px;
+        border: 2px solid #dfe6e9;
+        background: white;
+        border-radius: 10px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    
+    .filter-btn:hover,
+    .filter-btn.active {
+        background: linear-gradient(135deg, #00b894 0%, #00cec9 100%);
+        color: white;
+        border-color: #00b894;
+    }
+    
+    .users-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 25px;
+    }
+    
+    .user-card {
+        background: white;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        transition: all 0.3s ease;
+    }
+    
+    .user-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+    }
+    
+    .user-header {
+        background: linear-gradient(135deg, #00b894 0%, #00cec9 100%);
+        padding: 30px 20px;
+        text-align: center;
+        color: white;
+    }
+    
+    .user-avatar {
+        width: 80px;
+        height: 80px;
+        background: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 15px;
+        font-size: 2.5rem;
+        color: #00b894;
+    }
+    
+    .user-name {
+        font-size: 1.3rem;
+        font-weight: 700;
+        margin-bottom: 5px;
+    }
+    
+    .user-email {
+        font-size: 0.9rem;
+        opacity: 0.9;
+    }
+    
+    .user-info {
+        padding: 20px;
+    }
+    
+    .user-detail {
+        display: flex;
+        justify-content: space-between;
+        padding: 10px 0;
+        border-bottom: 1px solid #f1f3f5;
+    }
+    
+    .user-detail:last-child {
+        border-bottom: none;
+    }
+    
+    .detail-label {
+        font-weight: 600;
+        color: #636e72;
+    }
+    
+    .detail-value {
+        color: #2d3436;
+        font-weight: 600;
+    }
+    
+    .user-status {
+        display: inline-block;
+        padding: 5px 12px;
+        border-radius: 12px;
+        font-size: 0.85rem;
+        font-weight: 600;
+    }
+    
+    .status-active {
+        background: #d4edda;
+        color: #155724;
+    }
+    
+    .status-inactive {
+        background: #f8d7da;
+        color: #721c24;
+    }
+    
+    .status-staff {
+        background: #fff3cd;
+        color: #856404;
+    }
+    
+    .user-actions {
+        padding: 0 20px 20px;
+        display: flex;
+        gap: 10px;
+    }
+    
+    .btn-activate {
+        flex: 1;
+        padding: 10px;
+        background: linear-gradient(135deg, #00b894 0%, #00cec9 100%);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-align: center;
+    }
+    
+    .btn-activate:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 184, 148, 0.4);
+    }
+    
+    .btn-deactivate {
+        flex: 1;
+        padding: 10px;
+        background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-align: center;
+    }
+    
+    .btn-deactivate:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(255, 107, 107, 0.4);
+    }
+    
+    .empty-state {
+        text-align: center;
+        padding: 80px 20px;
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    
+    .empty-icon {
+        font-size: 80px;
+        color: #dfe6e9;
+        margin-bottom: 20px;
+    }
+    
+    .empty-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #2d3436;
+        margin-bottom: 10px;
+    }
+</style>
+
+<div class="manage-container">
+    <div class="container">
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1 class="page-title">👥 Manage Users</h1>
+            <p class="page-subtitle">View and manage all registered users</p>
+        </div>
+        
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+            <a href="{% url 'users:dashboard' %}" class="btn-action btn-back">
+                <i class="fas fa-arrow-left"></i> Back to Dashboard
+            </a>
+        </div>
+        
+        <!-- Search Box -->
+        <div class="search-box">
+            <input type="text" class="search-input" id="searchInput" placeholder="🔍 Search users by name or email...">
+        </div>
+        
+        <!-- Filter Section -->
+        <div class="filter-section">
+            <div class="filter-buttons">
+                <button class="filter-btn active" data-filter="all">All Users</button>
+                <button class="filter-btn" data-filter="active">Active</button>
+                <button class="filter-btn" data-filter="inactive">Inactive</button>
+                <button class="filter-btn" data-filter="staff">Staff</button>
+            </div>
+        </div>
+        
+        <!-- Users Grid -->
+        <div class="users-grid" id="usersGrid">
+            {% for user in users %}
+            <div class="user-card" data-name="{{ user.username|lower }} {{ user.email|lower }}" data-active="{{ user.is_active }}" data-staff="{{ user.is_staff }}">
+                <div class="user-header">
+                    <div class="user-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="user-name">{{ user.username }}</div>
+                    <div class="user-email">{{ user.email }}</div>
+                </div>
+                <div class="user-info">
+                    <div class="user-detail">
+                        <span class="detail-label">Status:</span>
+                        <span class="detail-value">
+                            {% if user.is_staff or user.is_superuser %}
+                            <span class="user-status status-staff">Staff</span>
+                            {% elif user.is_active %}
+                            <span class="user-status status-active">Active</span>
+                            {% else %}
+                            <span class="user-status status-inactive">Inactive</span>
+                            {% endif %}
+                        </span>
+                    </div>
+                    <div class="user-detail">
+                        <span class="detail-label">Joined:</span>
+                        <span class="detail-value">{{ user.date_joined|date:"M d, Y" }}</span>
+                    </div>
+                    <div class="user-detail">
+                        <span class="detail-label">Last Login:</span>
+                        <span class="detail-value">
+                            {% if user.last_login %}
+                            {{ user.last_login|date:"M d, Y" }}
+                            {% else %}
+                            Never
+                            {% endif %}
+                        </span>
+                    </div>
+                </div>
+                <div class="user-actions">
+                    {% if user.is_active %}
+                    <button onclick="toggleUserStatus({{ user.id }}, 'deactivate')" class="btn-deactivate">
+                        <i class="fas fa-ban"></i> Deactivate
+                    </button>
+                    {% else %}
+                    <button onclick="toggleUserStatus({{ user.id }}, 'activate')" class="btn-activate">
+                        <i class="fas fa-check"></i> Activate
+                    </button>
+                    {% endif %}
+                </div>
+            </div>
+            {% empty %}
+            <div class="empty-state">
+                <div class="empty-icon">👥</div>
+                <h3 class="empty-title">No Users Found</h3>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<script>
+    // Search functionality
+    document.getElementById('searchInput').addEventListener('input', function(e) {
+        const searchTerm = e.target.value.toLowerCase();
+        const users = document.querySelectorAll('.user-card');
+        
+        users.forEach(user => {
+            const name = user.getAttribute('data-name');
+            if (name.includes(searchTerm)) {
+                user.style.display = 'block';
+            } else {
+                user.style.display = 'none';
+            }
+        });
+    });
+    
+    // Filter functionality
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            // Update active button
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            
+            const filter = this.getAttribute('data-filter');
+            const users = document.querySelectorAll('.user-card');
+            
+            users.forEach(user => {
+                const isActive = user.getAttribute('data-active') === 'True';
+                const isStaff = user.getAttribute('data-staff') === 'True';
+                
+                if (filter === 'all') {
+                    user.style.display = 'block';
+                } else if (filter === 'active' && isActive && !isStaff) {
+                    user.style.display = 'block';
+                } else if (filter === 'inactive' && !isActive) {
+                    user.style.display = 'block';
+                } else if (filter === 'staff' && isStaff) {
+                    user.style.display = 'block';
+                } else {
+                    user.style.display = 'none';
+                }
+            });
+        });
+    });
+    
+    // Toggle user status
+    function toggleUserStatus(userId, action) {
+        if (confirm(`Are you sure you want to ${action} this user?`)) {
+            // Create form and submit
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = `/users/toggle-status/${userId}/`;
+            
+            // Add CSRF token
+            const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]');
+            if (csrfToken) {
+                const csrfInput = document.createElement('input');
+                csrfInput.type = 'hidden';
+                csrfInput.name = 'csrfmiddlewaretoken';
+                csrfInput.value = csrfToken.value;
+                form.appendChild(csrfInput);
+            }
+            
+            // Add action
+            const actionInput = document.createElement('input');
+            actionInput.type = 'hidden';
+            actionInput.name = 'action';
+            actionInput.value = action;
+            form.appendChild(actionInput);
+            
+            document.body.appendChild(form);
+            form.submit();
+        }
+    }
+</script>
+
+<!-- Hidden CSRF token for JavaScript -->
+{% csrf_token %}
+{% endblock %}

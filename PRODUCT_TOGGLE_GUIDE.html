@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Active/Deactive Guide</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 40px 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 50px;
+        }
+        
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            text-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+        
+        .header p {
+            font-size: 1.3rem;
+            opacity: 0.95;
+        }
+        
+        .content-box {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-bottom: 30px;
+        }
+        
+        .section-title {
+            font-size: 2rem;
+            color: #2d3436;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin: 30px 0;
+        }
+        
+        .comparison-card {
+            padding: 30px;
+            border-radius: 16px;
+            border: 3px solid;
+        }
+        
+        .comparison-card.active {
+            background: #d4edda;
+            border-color: #28a745;
+        }
+        
+        .comparison-card.inactive {
+            background: #f8d7da;
+            border-color: #dc3545;
+        }
+        
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+        
+        .card-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .card-list li {
+            padding: 10px 0;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .icon {
+            font-size: 1.5rem;
+        }
+        
+        .steps-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+        
+        .step-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 16px;
+            text-align: center;
+        }
+        
+        .step-number {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+        
+        .step-text {
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+        
+        .button-demo {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin: 30px 0;
+        }
+        
+        .demo-button {
+            padding: 15px 30px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: white;
+        }
+        
+        .demo-button.activate {
+            background: linear-gradient(135deg, #00b894 0%, #00cec9 100%);
+        }
+        
+        .demo-button.deactivate {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+        }
+        
+        .demo-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+        
+        .use-cases {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+        
+        .use-case {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 12px;
+            border-left: 5px solid #667eea;
+        }
+        
+        .use-case-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #2d3436;
+            margin-bottom: 10px;
+        }
+        
+        .use-case-text {
+            color: #636e72;
+            line-height: 1.6;
+        }
+        
+        .cta-box {
+            background: linear-gradient(135deg, #00b894 0%, #00cec9 100%);
+            color: white;
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            margin-top: 40px;
+        }
+        
+        .cta-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            background: white;
+            color: #00b894;
+            padding: 15px 40px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+        
+        @media (max-width: 768px) {
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>🔄 Product Active/Deactive Feature</h1>
+            <p>Control Product Visibility with One Click!</p>
+        </div>
+        
+        <!-- What It Does -->
+        <div class="content-box">
+            <h2 class="section-title">
+                <span>💡</span>
+                <span>What It Does</span>
+            </h2>
+            <p style="font-size: 1.2rem; color: #636e72; line-height: 1.8;">
+                The Active/Deactive feature lets you <strong>hide products from customers</strong> without deleting them. 
+                Perfect for expensive products, out-of-season items, or products waiting for restock. 
+                All product data is preserved and can be reactivated anytime!
+            </p>
+        </div>
+        
+        <!-- Active vs Inactive -->
+        <div class="content-box">
+            <h2 class="section-title">
+                <span>⚖️</span>
+                <span>Active vs Inactive Products</span>
+            </h2>
+            <div class="comparison-grid">
+                <div class="comparison-card active">
+                    <div class="card-title">✅ Active Product</div>
+                    <ul class="card-list">
+                        <li><span class="icon">👁️</span> Visible to customers</li>
+                        <li><span class="icon">🛒</span> Can be purchased</li>
+                        <li><span class="icon">🔍</span> Shows in search</li>
+                        <li><span class="icon">📱</span> Shows on home page</li>
+                        <li><span class="icon">🏷️</span> Shows in categories</li>
+                    </ul>
+                </div>
+                <div class="comparison-card inactive">
+                    <div class="card-title">🚫 Inactive Product</div>
+                    <ul class="card-list">
+                        <li><span class="icon">👁️</span> Hidden from customers</li>
+                        <li><span class="icon">🛒</span> Cannot be purchased</li>
+                        <li><span class="icon">🔍</span> Hidden from search</li>
+                        <li><span class="icon">📱</span> Hidden from home page</li>
+                        <li><span class="icon">🏷️</span> Hidden from categories</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <!-- How to Use -->
+        <div class="content-box">
+            <h2 class="section-title">
+                <span>🚀</span>
+                <span>How to Use</span>
+            </h2>
+            <div class="steps-grid">
+                <div class="step-card">
+                    <div class="step-number">1</div>
+                    <div class="step-text">Go to Manage Products page</div>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">2</div>
+                    <div class="step-text">Find the product you want to toggle</div>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">3</div>
+                    <div class="step-text">Click Activate or Deactivate button</div>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">4</div>
+                    <div class="step-text">Confirm the action - Done!</div>
+                </div>
+            </div>
+            
+            <h3 style="text-align: center; margin: 30px 0; font-size: 1.5rem;">Button Examples:</h3>
+            <div class="button-demo">
+                <button class="demo-button activate">
+                    <i>✓</i> Activate
+                </button>
+                <button class="demo-button deactivate">
+                    <i>🚫</i> Deactivate
+                </button>
+            </div>
+        </div>
+        
+        <!-- Use Cases -->
+        <div class="content-box">
+            <h2 class="section-title">
+                <span>📋</span>
+                <span>When to Use</span>
+            </h2>
+            <div class="use-cases">
+                <div class="use-case">
+                    <div class="use-case-title">💰 Expensive Products</div>
+                    <div class="use-case-text">
+                        Hide products that are too expensive to sell right now. 
+                        Reactivate when ready to sell at that price.
+                    </div>
+                </div>
+                <div class="use-case">
+                    <div class="use-case-title">📦 Waiting for Stock</div>
+                    <div class="use-case-text">
+                        Hide out-of-stock products while waiting for supplier. 
+                        Reactivate when stock arrives.
+                    </div>
+                </div>
+                <div class="use-case">
+                    <div class="use-case-title">🌡️ Seasonal Items</div>
+                    <div class="use-case-text">
+                        Hide winter products in summer, summer products in winter. 
+                        Keep your store relevant!
+                    </div>
+                </div>
+                <div class="use-case">
+                    <div class="use-case-title">🧪 Testing Prices</div>
+                    <div class="use-case-text">
+                        Hide product, update price, reactivate. 
+                        Test different prices without customer confusion.
+                    </div>
+                </div>
+                <div class="use-case">
+                    <div class="use-case-title">🚀 Launch Control</div>
+                    <div class="use-case-text">
+                        Add products early, keep them inactive. 
+                        Activate when ready to launch!
+                    </div>
+                </div>
+                <div class="use-case">
+                    <div class="use-case-title">🔧 Maintenance</div>
+                    <div class="use-case-text">
+                        Hide products while updating descriptions, images, or details. 
+                        Reactivate when done.
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Benefits -->
+        <div class="content-box">
+            <h2 class="section-title">
+                <span>⭐</span>
+                <span>Key Benefits</span>
+            </h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
+                <div style="text-align: center; padding: 20px;">
+                    <div style="font-size: 3rem; margin-bottom: 10px;">💾</div>
+                    <div style="font-weight: 700; font-size: 1.2rem; margin-bottom: 5px;">No Data Loss</div>
+                    <div style="color: #636e72;">All product data is preserved</div>
+                </div>
+                <div style="text-align: center; padding: 20px;">
+                    <div style="font-size: 3rem; margin-bottom: 10px;">⚡</div>
+                    <div style="font-weight: 700; font-size: 1.2rem; margin-bottom: 5px;">Instant Toggle</div>
+                    <div style="color: #636e72;">One-click activate/deactivate</div>
+                </div>
+                <div style="text-align: center; padding: 20px;">
+                    <div style="font-size: 3rem; margin-bottom: 10px;">🎯</div>
+                    <div style="font-weight: 700; font-size: 1.2rem; margin-bottom: 5px;">Full Control</div>
+                    <div style="color: #636e72;">Show/hide products anytime</div>
+                </div>
+                <div style="text-align: center; padding: 20px;">
+                    <div style="font-size: 3rem; margin-bottom: 10px;">👥</div>
+                    <div style="font-weight: 700; font-size: 1.2rem; margin-bottom: 5px;">Better UX</div>
+                    <div style="color: #636e72;">Customers see relevant products only</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- CTA -->
+        <div class="cta-box">
+            <div class="cta-title">Ready to Try It?</div>
+            <p style="font-size: 1.2rem; margin-bottom: 30px; opacity: 0.95;">
+                Go to Manage Products and start controlling your product visibility!
+            </p>
+            <a href="http://127.0.0.1:8000/products/manage/" class="cta-button">
+                Go to Manage Products →
+            </a>
+        </div>
+    </div>
+</body>
+</html>

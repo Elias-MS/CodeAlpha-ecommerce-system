@@ -1,0 +1,550 @@
+{% extends 'base.html' %}
+
+{% block title %}Manage Products - E-Commerce Store{% endblock %}
+
+{% block content %}
+<style>
+    .manage-container {
+        padding: 40px 20px;
+        background: #f8f9fa;
+        min-height: 100vh;
+    }
+    
+    .page-header {
+        background: white;
+        padding: 30px;
+        border-radius: 16px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        margin-bottom: 30px;
+    }
+    
+    .page-title {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #2d3436;
+        margin-bottom: 10px;
+    }
+    
+    .page-subtitle {
+        color: #636e72;
+        font-size: 1.1rem;
+    }
+    
+    .action-buttons {
+        display: flex;
+        gap: 15px;
+        margin-bottom: 30px;
+        flex-wrap: wrap;
+    }
+    
+    .btn-action {
+        padding: 12px 25px;
+        border-radius: 10px;
+        font-weight: 600;
+        border: none;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .btn-add {
+        background: linear-gradient(135deg, #00b894 0%, #00cec9 100%);
+        color: white;
+    }
+    
+    .btn-add:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0, 184, 148, 0.4);
+        color: white;
+    }
+    
+    .products-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(450px, 1fr));
+        gap: 25px;
+    }
+    
+    .product-card {
+        background: white;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        transition: all 0.3s ease;
+    }
+    
+    .product-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+    }
+    
+    .product-info {
+        padding: 20px;
+    }
+    
+    .product-main-image {
+        width: 100%;
+        height: 250px;
+        object-fit: cover;
+        border-radius: 12px;
+        margin-bottom: 20px;
+        border: 2px solid #f1f3f5;
+    }
+    
+    .product-name-large {
+        font-size: 1.4rem;
+        font-weight: 700;
+        color: #2d3436;
+        margin-bottom: 20px;
+        line-height: 1.4;
+    }
+    
+    .product-detail {
+        display: flex;
+        justify-content: space-between;
+        padding: 10px 0;
+        border-bottom: 1px solid #f1f3f5;
+    }
+    
+    .product-detail:last-of-type {
+        border-bottom: none;
+    }
+    
+    .detail-label {
+        font-weight: 600;
+        color: #636e72;
+    }
+    
+    .detail-value {
+        color: #2d3436;
+        font-weight: 600;
+    }
+    
+    .product-price-large {
+        font-size: 1.8rem;
+        font-weight: 800;
+        color: #667eea;
+    }
+    
+    .product-stock {
+        font-size: 0.9rem;
+        padding: 5px 12px;
+        border-radius: 12px;
+        font-weight: 600;
+    }
+    
+    .stock-available {
+        background: #d4edda;
+        color: #155724;
+    }
+    
+    .stock-low {
+        background: #fff3cd;
+        color: #856404;
+    }
+    
+    .stock-out {
+        background: #f8d7da;
+        color: #721c24;
+    }
+    
+    .product-description {
+        margin: 15px 0;
+        padding: 15px;
+        background: #f8f9fa;
+        border-radius: 12px;
+    }
+    
+    .product-description strong {
+        color: #2d3436;
+        display: block;
+        margin-bottom: 8px;
+    }
+    
+    .product-description p {
+        color: #636e72;
+        line-height: 1.6;
+        margin: 0;
+    }
+    
+    .product-actions {
+        padding: 20px;
+        background: #f8f9fa;
+        border-top: 2px solid #e9ecef;
+    }
+    
+    .btn-view-details {
+        display: block;
+        width: 100%;
+        padding: 12px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        text-align: center;
+    }
+    
+    .btn-view-details:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        color: white;
+    }
+    
+    .search-box {
+        background: white;
+        padding: 20px;
+        border-radius: 16px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        margin-bottom: 30px;
+    }
+    
+    .search-input {
+        width: 100%;
+        padding: 15px 20px;
+        border: 2px solid #dfe6e9;
+        border-radius: 10px;
+        font-size: 1rem;
+    }
+    
+    .search-input:focus {
+        outline: none;
+        border-color: #667eea;
+    }
+    
+    .filter-section {
+        background: white;
+        padding: 20px;
+        border-radius: 16px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        margin-bottom: 30px;
+    }
+    
+    .filter-buttons {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+    
+    .filter-btn {
+        padding: 10px 20px;
+        border: 2px solid #dfe6e9;
+        background: white;
+        border-radius: 10px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    
+    .filter-btn:hover,
+    .filter-btn.active {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border-color: #667eea;
+    }
+    
+    .empty-state {
+        text-align: center;
+        padding: 80px 20px;
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    
+    .empty-icon {
+        font-size: 80px;
+        color: #dfe6e9;
+        margin-bottom: 20px;
+    }
+    
+    .empty-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #2d3436;
+        margin-bottom: 10px;
+    }
+    
+    .empty-text {
+        color: #636e72;
+        margin-bottom: 20px;
+    }
+    
+    /* Modal Styles */
+    .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.5);
+        z-index: 1000;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .modal.active {
+        display: flex;
+    }
+    
+    .modal-content {
+        background: white;
+        border-radius: 16px;
+        padding: 30px;
+        max-width: 600px;
+        width: 90%;
+        max-height: 90vh;
+        overflow-y: auto;
+    }
+    
+    .modal-header {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #2d3436;
+        margin-bottom: 20px;
+    }
+    
+    .form-group {
+        margin-bottom: 20px;
+    }
+    
+    .form-label {
+        display: block;
+        font-weight: 600;
+        color: #2d3436;
+        margin-bottom: 8px;
+    }
+    
+    .form-control {
+        width: 100%;
+        padding: 12px 16px;
+        border: 2px solid #dfe6e9;
+        border-radius: 10px;
+        font-size: 1rem;
+    }
+    
+    .form-control:focus {
+        outline: none;
+        border-color: #667eea;
+    }
+    
+    .modal-actions {
+        display: flex;
+        gap: 10px;
+        margin-top: 30px;
+    }
+    
+    .btn-save {
+        flex: 1;
+        padding: 12px;
+        background: linear-gradient(135deg, #00b894 0%, #00cec9 100%);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-weight: 600;
+        cursor: pointer;
+    }
+    
+    .btn-cancel {
+        flex: 1;
+        padding: 12px;
+        background: #dfe6e9;
+        color: #2d3436;
+        border: none;
+        border-radius: 10px;
+        font-weight: 600;
+        cursor: pointer;
+    }
+</style>
+
+<div class="manage-container">
+    <div class="container">
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1 class="page-title">📦 Manage Products</h1>
+            <p class="page-subtitle">Add, edit, or delete products easily</p>
+        </div>
+        
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+            <a href="{% url 'users:dashboard' %}" class="btn-action" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+                <i class="fas fa-arrow-left"></i> Back to Dashboard
+            </a>
+            <a href="{% url 'products:add_product' %}" class="btn-action btn-add">
+                <i class="fas fa-plus"></i> Add New Product
+            </a>
+            <a href="{% url 'products:product_list' %}" class="btn-action" style="background: #667eea; color: white;">
+                <i class="fas fa-eye"></i> View Store
+            </a>
+        </div>
+        
+        <!-- Search Box -->
+        <div class="search-box">
+            <input type="text" class="search-input" id="searchInput" placeholder="🔍 Search products by name...">
+        </div>
+        
+        <!-- Filter Section -->
+        <div class="filter-section">
+            <div class="filter-buttons">
+                <button class="filter-btn active" data-filter="all">All Products</button>
+                <button class="filter-btn" data-filter="available">Available</button>
+                <button class="filter-btn" data-filter="low-stock">Low Stock</button>
+                <button class="filter-btn" data-filter="out-of-stock">Out of Stock</button>
+            </div>
+        </div>
+        
+        <!-- Products Grid -->
+        <div class="products-grid" id="productsGrid">
+            {% for product in products %}
+            <div class="product-card" data-name="{{ product.name|lower }}" data-stock="{{ product.stock }}">
+                <div class="product-info">
+                    <!-- Product Image -->
+                    <img src="{{ product.image.url }}" alt="{{ product.name }}" class="product-main-image">
+                    
+                    <!-- Product Name -->
+                    <h3 class="product-name-large">{{ product.name }}</h3>
+                    
+                    <!-- Category -->
+                    <div class="product-detail">
+                        <span class="detail-label">🏷️ Category:</span>
+                        <span class="detail-value">{{ product.category.name }}</span>
+                    </div>
+                    
+                    <!-- Price -->
+                    <div class="product-detail">
+                        <span class="detail-label">💰 Price:</span>
+                        <span class="product-price-large">${{ product.price }}</span>
+                    </div>
+                    
+                    <!-- Stock -->
+                    <div class="product-detail">
+                        <span class="detail-label">📦 Stock:</span>
+                        <span class="detail-value">
+                            {% if product.stock > 50 %}
+                            <span class="product-stock stock-available">✓ In Stock ({{ product.stock }})</span>
+                            {% elif product.stock > 0 %}
+                            <span class="product-stock stock-low">⚠ Low Stock ({{ product.stock }})</span>
+                            {% else %}
+                            <span class="product-stock stock-out">✗ Out of Stock</span>
+                            {% endif %}
+                        </span>
+                    </div>
+                    
+                    <!-- Rating -->
+                    <div class="product-detail">
+                        <span class="detail-label">⭐ Rating:</span>
+                        <span class="detail-value">{{ product.rating }} / 5.0</span>
+                    </div>
+                    
+                    <!-- Description Preview -->
+                    <div class="product-description">
+                        <strong>Description:</strong>
+                        <p>{{ product.description|truncatewords:20 }}</p>
+                    </div>
+                </div>
+                
+                <div class="product-actions">
+                    <a href="{% url 'products:edit_product' product.id %}" class="btn-view-details">
+                        <i class="fas fa-eye"></i> View Details
+                    </a>
+                </div>
+            </div>
+            {% empty %}
+            <div class="empty-state">
+                <div class="empty-icon">📦</div>
+                <h3 class="empty-title">No Products Yet</h3>
+                <p class="empty-text">Start by adding your first product</p>
+                <a href="{% url 'products:add_product' %}" class="btn-action btn-add">
+                    <i class="fas fa-plus"></i> Add Product
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal" id="deleteModal">
+    <div class="modal-content">
+        <h2 class="modal-header">⚠️ Confirm Delete</h2>
+        <p>Are you sure you want to delete <strong id="productName"></strong>?</p>
+        <p style="color: #636e72;">This action cannot be undone.</p>
+        <div class="modal-actions">
+            <form method="post" id="deleteForm" style="flex: 1;">
+                {% csrf_token %}
+                <button type="submit" class="btn-delete" style="width: 100%;">
+                    <i class="fas fa-trash"></i> Yes, Delete
+                </button>
+            </form>
+            <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Search functionality
+    document.getElementById('searchInput').addEventListener('input', function(e) {
+        const searchTerm = e.target.value.toLowerCase();
+        const products = document.querySelectorAll('.product-card');
+        
+        products.forEach(product => {
+            const name = product.getAttribute('data-name');
+            if (name.includes(searchTerm)) {
+                product.style.display = 'block';
+            } else {
+                product.style.display = 'none';
+            }
+        });
+    });
+    
+    // Filter functionality
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            // Update active button
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            
+            const filter = this.getAttribute('data-filter');
+            const products = document.querySelectorAll('.product-card');
+            
+            products.forEach(product => {
+                const stock = parseInt(product.getAttribute('data-stock'));
+                
+                if (filter === 'all') {
+                    product.style.display = 'block';
+                } else if (filter === 'available' && stock > 50) {
+                    product.style.display = 'block';
+                } else if (filter === 'low-stock' && stock > 0 && stock <= 50) {
+                    product.style.display = 'block';
+                } else if (filter === 'out-of-stock' && stock === 0) {
+                    product.style.display = 'block';
+                } else {
+                    product.style.display = 'none';
+                }
+            });
+        });
+    });
+    
+    // Delete confirmation
+    function confirmDelete(productId, productName) {
+        document.getElementById('productName').textContent = productName;
+        document.getElementById('deleteForm').action = `/products/delete/${productId}/`;
+        document.getElementById('deleteModal').classList.add('active');
+    }
+    
+    function closeModal() {
+        document.getElementById('deleteModal').classList.remove('active');
+    }
+    
+    // Close modal on outside click
+    document.getElementById('deleteModal').addEventListener('click', function(e) {
+        if (e.target === this) {
+            closeModal();
+        }
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,98 @@
+{% extends "admin/base.html" %}
+
+{% block title %}{{ title }} | E-Shop Admin{% endblock %}
+
+{% block branding %}
+<h1 id="site-name"><a href="{% url 'admin:index' %}">E-Shop Admin</a></h1>
+{% endblock %}
+
+{% block nav-global %}{% endblock %}
+
+{% block nav-sidebar %}
+{# SIDEBAR COMPLETELY REMOVED #}
+{% endblock %}
+
+{% block extrahead %}
+{{ block.super }}
+<style>
+    /* FORCE REMOVE ALL SIDEBAR ELEMENTS */
+    #nav-sidebar,
+    nav#nav-sidebar,
+    nav[aria-label="Sidebar"],
+    .sticky,
+    aside,
+    [class*="sidebar"],
+    [id*="sidebar"] {
+        display: none !important;
+        visibility: hidden !important;
+        width: 0 !important;
+        height: 0 !important;
+        opacity: 0 !important;
+    }
+    
+    /* FORCE FULL WIDTH */
+    body.change-form,
+    body.change-list,
+    .main,
+    .main.shifted,
+    #content,
+    #content-main,
+    .colM,
+    .colMS {
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+    
+    /* HIDE TOGGLE */
+    .toggle-nav-sidebar,
+    button[class*="toggle"],
+    [class*="toggle-nav"] {
+        display: none !important;
+    }
+</style>
+
+<script>
+// FORCE REMOVE SIDEBAR WITH JAVASCRIPT
+document.addEventListener('DOMContentLoaded', function() {
+    // Remove all sidebar elements
+    const sidebarSelectors = [
+        '#nav-sidebar',
+        'nav#nav-sidebar',
+        'nav[aria-label="Sidebar"]',
+        '.sticky',
+        'aside',
+        '[class*="sidebar"]',
+        '[id*="sidebar"]',
+        '.toggle-nav-sidebar'
+    ];
+    
+    sidebarSelectors.forEach(function(selector) {
+        const elements = document.querySelectorAll(selector);
+        elements.forEach(function(el) {
+            if (el) {
+                el.remove();
+            }
+        });
+    });
+    
+    // Force full width
+    const contentSelectors = ['.main', '#content', '#content-main'];
+    contentSelectors.forEach(function(selector) {
+        const elements = document.querySelectorAll(selector);
+        elements.forEach(function(el) {
+            if (el) {
+                el.style.marginLeft = '0';
+                el.style.marginRight = '0';
+                el.style.width = '100%';
+                el.style.maxWidth = '100%';
+            }
+        });
+    });
+    
+    console.log('Sidebar removed by custom template');
+});
+</script>
+{% endblock %}
+

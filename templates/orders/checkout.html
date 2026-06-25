@@ -1,0 +1,159 @@
+{% extends 'base.html' %}
+
+{% block title %}Checkout - E-Commerce Store{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <h2 class="mb-4"><i class="fas fa-credit-card"></i> Checkout</h2>
+    
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Shipping Information</h5>
+                </div>
+                <div class="card-body">
+                    <form method="post" action="{% url 'orders:place_order' %}" id="checkoutForm">
+                        {% csrf_token %}
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="full_name" class="form-label">Full Name *</label>
+                                <input type="text" class="form-control" id="full_name" name="full_name" value="{{ user.get_full_name }}" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="email" class="form-label">Email *</label>
+                                <input type="email" class="form-control" id="email" name="email" value="{{ user.email }}" required>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="phone" class="form-label">Phone Number *</label>
+                            <input type="tel" class="form-control" id="phone" name="phone" value="{% if user_profile %}{{ user_profile.phone }}{% endif %}" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="shipping_address" class="form-label">Shipping Address *</label>
+                            <textarea class="form-control" id="shipping_address" name="shipping_address" rows="3" required>{% if user_profile %}{{ user_profile.address }}{% endif %}</textarea>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label for="city" class="form-label">City *</label>
+                                <input type="text" class="form-control" id="city" name="city" value="{% if user_profile %}{{ user_profile.city }}{% endif %}" required>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="state" class="form-label">State *</label>
+                                <input type="text" class="form-control" id="state" name="state" value="{% if user_profile %}{{ user_profile.state }}{% endif %}" required>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="zipcode" class="form-label">Zip Code *</label>
+                                <input type="text" class="form-control" id="zipcode" name="zipcode" value="{% if user_profile %}{{ user_profile.zipcode }}{% endif %}" required>
+                            </div>
+                        </div>
+                        
+                        <hr>
+                        
+                        <h5 class="mb-3">Payment Method</h5>
+                        <div class="mb-3">
+                            <div class="form-check mb-2">
+                                <input class="form-check-input payment-radio" type="radio" name="payment_method" id="cod" value="cod" checked>
+                                <label class="form-check-label" for="cod">
+                                    <i class="fas fa-money-bill-wave"></i> Cash on Delivery
+                                </label>
+                            </div>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input payment-radio" type="radio" name="payment_method" id="card" value="card">
+                                <label class="form-check-label" for="card">
+                                    <i class="fas fa-credit-card"></i> Credit/Debit Card
+                                </label>
+                            </div>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input payment-radio" type="radio" name="payment_method" id="upi" value="upi">
+                                <label class="form-check-label" for="upi">
+                                    <i class="fas fa-mobile-alt"></i> UPI
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input payment-radio" type="radio" name="payment_method" id="netbanking" value="netbanking">
+                                <label class="form-check-label" for="netbanking">
+                                    <i class="fas fa-university"></i> Net Banking
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <!-- Payment Reference Number Field (shown for online payments) -->
+                        <div class="mb-3" id="payment-reference-field" style="display: none;">
+                            <label for="payment_reference" class="form-label">
+                                Payment Reference/Transaction Number *
+                                <small class="text-muted">(Required for online payments)</small>
+                            </label>
+                            <input type="text" class="form-control" id="payment_reference" name="payment_reference" placeholder="Enter transaction/reference number">
+                            <small class="form-text text-muted">
+                                Please enter your transaction ID or reference number after completing the payment.
+                            </small>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-success btn-lg w-100">
+                            <i class="fas fa-check-circle"></i> Place Order
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Order Summary</h5>
+                </div>
+                <div class="card-body">
+                    {% for item in cart_items %}
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>{{ item.product.name }} x {{ item.quantity }}</span>
+                        <strong>{{ CURRENCY_SYMBOL }}{{ item.subtotal }}</strong>
+                    </div>
+                    {% endfor %}
+                    <hr>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Subtotal:</span>
+                        <strong>{{ CURRENCY_SYMBOL }}{{ cart.total_price }}</strong>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Shipping:</span>
+                        <strong>Free</strong>
+                    </div>
+                    <hr>
+                    <div class="d-flex justify-content-between">
+                        <h5>Total:</h5>
+                        <h5 class="text-primary">{{ CURRENCY_SYMBOL }}{{ cart.total_price }}</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Show/hide payment reference field based on payment method
+document.addEventListener('DOMContentLoaded', function() {
+    const paymentRadios = document.querySelectorAll('.payment-radio');
+    const referenceField = document.getElementById('payment-reference-field');
+    const referenceInput = document.getElementById('payment_reference');
+    
+    paymentRadios.forEach(radio => {
+        radio.addEventListener('change', function() {
+            if (this.value === 'cod') {
+                // Hide reference field for COD
+                referenceField.style.display = 'none';
+                referenceInput.removeAttribute('required');
+            } else {
+                // Show reference field for online payments
+                referenceField.style.display = 'block';
+                referenceInput.setAttribute('required', 'required');
+            }
+        });
+    });
+});
+</script>
+{% endblock %}

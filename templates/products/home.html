@@ -1,0 +1,637 @@
+{% extends 'base.html' %}
+
+{% block title %}Home - E-Commerce Store{% endblock %}
+
+{% block content %}
+<style>
+    /* Modern Hero Section */
+    .hero-section {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        padding: 80px 0;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .hero-section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="rgba(255,255,255,0.1)" d="M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,122.7C672,117,768,139,864,138.7C960,139,1056,117,1152,106.7C1248,96,1344,96,1392,96L1440,96L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>') no-repeat bottom;
+        background-size: cover;
+        opacity: 0.3;
+    }
+    
+    .hero-content {
+        position: relative;
+        z-index: 2;
+    }
+    
+    .hero-title {
+        font-size: 3.5rem;
+        font-weight: 800;
+        margin-bottom: 20px;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+    }
+    
+    .hero-subtitle {
+        font-size: 1.3rem;
+        margin-bottom: 30px;
+        opacity: 0.95;
+    }
+    
+    .hero-btn {
+        padding: 15px 40px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        border-radius: 50px;
+        background: white;
+        color: #667eea;
+        border: none;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        transition: all 0.3s ease;
+    }
+    
+    .hero-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 12px 30px rgba(0,0,0,0.3);
+        color: #764ba2;
+    }
+    
+    .hero-image {
+        animation: float 3s ease-in-out infinite;
+    }
+    
+    @keyframes float {
+        0%, 100% { transform: translateY(0px); }
+        50% { transform: translateY(-20px); }
+    }
+    
+    /* Modern Category Cards */
+    .category-card {
+        border: none;
+        border-radius: 16px;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        background: white;
+        height: 100%;
+    }
+    
+    .category-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 12px 28px rgba(102, 126, 234, 0.25);
+    }
+    
+    .category-card .card-body {
+        padding: 30px 20px;
+    }
+    
+    .category-icon {
+        width: 80px;
+        height: 80px;
+        margin: 0 auto 20px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 2.5rem;
+        transition: all 0.3s ease;
+    }
+    
+    .category-card:hover .category-icon {
+        transform: rotate(10deg) scale(1.1);
+    }
+    
+    .category-title {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: #2d3436;
+        margin-bottom: 8px;
+    }
+    
+    .category-count {
+        color: #636e72;
+        font-size: 0.95rem;
+    }
+    
+    /* Modern Product Cards */
+    .product-card {
+        border: none;
+        border-radius: 16px;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        background: white;
+    }
+    
+    .product-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 12px 28px rgba(0,0,0,0.15);
+    }
+    
+    .product-card img {
+        height: 250px;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+    }
+    
+    .product-card:hover img {
+        transform: scale(1.08);
+    }
+    
+    .product-card .card-body {
+        padding: 20px;
+    }
+    
+    .product-card .card-title {
+        font-size: 1rem;
+        font-weight: 600;
+        color: #2d3436;
+        height: 48px;
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+    }
+    
+    .product-price {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #ff6b35;
+    }
+    
+    .product-rating {
+        background: #ffeaa7;
+        padding: 4px 10px;
+        border-radius: 12px;
+        font-size: 0.9rem;
+        font-weight: 600;
+    }
+    
+    .product-card .card-footer {
+        background: transparent;
+        border: none;
+        padding: 0 20px 20px;
+    }
+    
+    .btn-view-product {
+        width: 100%;
+        padding: 12px;
+        border-radius: 10px;
+        font-weight: 600;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border: none;
+        color: white;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-view-product:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        color: white;
+    }
+    
+    /* Section Titles */
+    .section-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: #2d3436;
+        margin-bottom: 40px;
+        position: relative;
+        display: inline-block;
+    }
+    
+    .section-title::after {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 80px;
+        height: 4px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 2px;
+    }
+    
+    /* Promo Banner */
+    .promo-banner {
+        background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
+        padding: 40px 0;
+        border-radius: 0;
+    }
+    
+    .promo-banner h3 {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: #2d3436;
+    }
+    
+    .promo-banner .btn {
+        padding: 12px 35px;
+        border-radius: 50px;
+        font-weight: 600;
+    }
+    
+    /* Feature Cards */
+    .feature-card {
+        border: none;
+        border-radius: 16px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        transition: all 0.3s ease;
+        background: white;
+    }
+    
+    .feature-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+    }
+    
+    .feature-icon {
+        width: 80px;
+        height: 80px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 50%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 20px;
+    }
+    
+    /* Testimonial Cards */
+    .testimonial-card {
+        border: none;
+        border-radius: 16px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        transition: all 0.3s ease;
+        background: white;
+    }
+    
+    .testimonial-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+    }
+    
+    /* Stats Section */
+    .stats-section {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        padding: 60px 0;
+    }
+    
+    .stat-item h2 {
+        font-size: 3rem;
+        font-weight: 800;
+        margin-bottom: 10px;
+    }
+    
+    /* Newsletter Section */
+    .newsletter-section {
+        padding: 60px 0;
+        background: #f8f9fa;
+    }
+    
+    .newsletter-section h2 {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #2d3436;
+    }
+    
+    .newsletter-section .form-control {
+        border-radius: 50px;
+        padding: 15px 25px;
+        border: 2px solid #dfe6e9;
+    }
+    
+    .newsletter-section .btn {
+        border-radius: 50px;
+        padding: 15px 35px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border: none;
+        font-weight: 600;
+    }
+</style>
+
+<!-- Hero Section -->
+<section class="hero-section text-white">
+    <div class="container hero-content">
+        <div class="row align-items-center">
+            <div class="col-md-6">
+                <h1 class="hero-title">Welcome to E-Shop</h1>
+                <p class="hero-subtitle">Discover amazing products at unbeatable prices. Shop now and enjoy fast delivery!</p>
+                <a href="{% url 'products:product_list' %}" class="btn hero-btn">
+                    <i class="fas fa-shopping-bag me-2"></i> Shop Now
+                </a>
+            </div>
+            <div class="col-md-6 text-center">
+                <i class="fas fa-shopping-cart fa-10x hero-image"></i>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Categories Section -->
+<section class="categories-section py-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="section-title">Shop by Category</h2>
+        </div>
+        <div class="row g-4">
+            {% for category in categories %}
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6">
+                <a href="{% url 'products:product_list' %}?category={{ category.id }}" class="text-decoration-none">
+                    <div class="card category-card text-center">
+                        <div class="card-body">
+                            <div class="category-icon">
+                                <i class="fas fa-tag"></i>
+                            </div>
+                            <h5 class="category-title">{{ category.name }}</h5>
+                            <p class="category-count">{{ category.products.count }} Products</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Featured Products Section -->
+<section class="featured-products py-5 bg-light">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="section-title">Featured Products</h2>
+        </div>
+        <div class="row g-4">
+            {% for product in products %}
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6">
+                <div class="card product-card h-100">
+                    <div style="overflow: hidden; border-radius: 16px 16px 0 0;">
+                        <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}">
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">{{ product.name }}</h5>
+                        <div class="d-flex justify-content-between align-items-center mt-3">
+                            <span class="product-price" data-price="{{ product.price }}" data-price-id="product-{{ product.id }}-home">{{ CURRENCY_SYMBOL }}{{ product.price }}</span>
+                            <span class="product-rating">
+                                <i class="fas fa-star text-warning"></i> {{ product.rating }}
+                            </span>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <a href="{% url 'products:product_detail' product.pk %}" class="btn btn-view-product">
+                            <i class="fas fa-eye me-2"></i> View Details
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center">
+                <p class="text-muted">No products available at the moment.</p>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="text-center mt-5">
+            <a href="{% url 'products:product_list' %}" class="btn btn-view-product" style="width: auto; padding: 15px 40px; font-size: 1.1rem;">
+                View All Products <i class="fas fa-arrow-right ms-2"></i>
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- Promotional Banner Section -->
+<section class="promo-banner py-4 bg-warning">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-md-8">
+                <h3 class="mb-0">
+                    <i class="fas fa-gift"></i> Special Offer! Get 20% OFF on your first order
+                </h3>
+                <p class="mb-0 text-muted">Use code: <strong>WELCOME20</strong> at checkout</p>
+            </div>
+            <div class="col-md-4 text-end">
+                <a href="{% url 'products:product_list' %}" class="btn btn-dark btn-lg">
+                    Shop Now <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Why Shop With Us Section -->
+<section class="why-us-section py-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="section-title">Why Shop With Us?</h2>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card feature-card h-100">
+                    <div class="card-body text-center p-4">
+                        <div class="feature-icon">
+                            <i class="fas fa-shield-alt fa-2x"></i>
+                        </div>
+                        <h5 class="card-title fw-bold">Trusted & Secure</h5>
+                        <p class="card-text text-muted">Your data and payments are protected with industry-leading security measures.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card feature-card h-100">
+                    <div class="card-body text-center p-4">
+                        <div class="feature-icon">
+                            <i class="fas fa-tags fa-2x"></i>
+                        </div>
+                        <h5 class="card-title fw-bold">Best Prices</h5>
+                        <p class="card-text text-muted">Competitive pricing with regular discounts and special offers for our customers.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card feature-card h-100">
+                    <div class="card-body text-center p-4">
+                        <div class="feature-icon">
+                            <i class="fas fa-star fa-2x"></i>
+                        </div>
+                        <h5 class="card-title fw-bold">Quality Products</h5>
+                        <p class="card-text text-muted">Carefully curated selection of high-quality products from trusted brands.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="features-section py-5">
+    <div class="container">
+        <div class="row text-center">
+            <div class="col-md-3 col-sm-6 mb-4">
+                <i class="fas fa-shipping-fast fa-3x text-primary mb-3"></i>
+                <h5>Fast Delivery</h5>
+                <p class="text-muted">Quick and reliable shipping</p>
+            </div>
+            <div class="col-md-3 col-sm-6 mb-4">
+                <i class="fas fa-lock fa-3x text-primary mb-3"></i>
+                <h5>Secure Payment</h5>
+                <p class="text-muted">100% secure transactions</p>
+            </div>
+            <div class="col-md-3 col-sm-6 mb-4">
+                <i class="fas fa-undo fa-3x text-primary mb-3"></i>
+                <h5>Easy Returns</h5>
+                <p class="text-muted">Hassle-free return policy</p>
+            </div>
+            <div class="col-md-3 col-sm-6 mb-4">
+                <i class="fas fa-headset fa-3x text-primary mb-3"></i>
+                <h5>24/7 Support</h5>
+                <p class="text-muted">Always here to help</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Testimonials Section -->
+<section class="testimonials-section py-5 bg-light">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="section-title">What Our Customers Say</h2>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card testimonial-card h-100">
+                    <div class="card-body p-4">
+                        <div class="mb-3">
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                        </div>
+                        <p class="card-text mb-3">"Amazing shopping experience! Fast delivery and excellent customer service. Highly recommended!"</p>
+                        <div class="d-flex align-items-center">
+                            <div class="rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <div>
+                                <h6 class="mb-0 fw-bold">Sarah Johnson</h6>
+                                <small class="text-muted">Verified Customer</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card testimonial-card h-100">
+                    <div class="card-body p-4">
+                        <div class="mb-3">
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                        </div>
+                        <p class="card-text mb-3">"Great quality products at competitive prices. The website is easy to navigate and checkout is smooth."</p>
+                        <div class="d-flex align-items-center">
+                            <div class="rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <div>
+                                <h6 class="mb-0 fw-bold">Michael Chen</h6>
+                                <small class="text-muted">Verified Customer</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card testimonial-card h-100">
+                    <div class="card-body p-4">
+                        <div class="mb-3">
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                        </div>
+                        <p class="card-text mb-3">"Best online shopping platform! Love the variety of products and the customer support is outstanding."</p>
+                        <div class="d-flex align-items-center">
+                            <div class="rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <div>
+                                <h6 class="mb-0 fw-bold">Emily Rodriguez</h6>
+                                <small class="text-muted">Verified Customer</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Statistics Section -->
+<section class="stats-section py-5 bg-primary text-white">
+    <div class="container">
+        <div class="row text-center">
+            <div class="col-md-3 col-sm-6 mb-4">
+                <div class="stat-item">
+                    <h2 class="display-4 fw-bold mb-0">
+                        <i class="fas fa-users"></i> 10K+
+                    </h2>
+                    <p class="mb-0">Happy Customers</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6 mb-4">
+                <div class="stat-item">
+                    <h2 class="display-4 fw-bold mb-0">
+                        <i class="fas fa-box"></i> 5K+
+                    </h2>
+                    <p class="mb-0">Products Available</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6 mb-4">
+                <div class="stat-item">
+                    <h2 class="display-4 fw-bold mb-0">
+                        <i class="fas fa-shopping-bag"></i> 50K+
+                    </h2>
+                    <p class="mb-0">Orders Delivered</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6 mb-4">
+                <div class="stat-item">
+                    <h2 class="display-4 fw-bold mb-0">
+                        <i class="fas fa-star"></i> 4.9
+                    </h2>
+                    <p class="mb-0">Average Rating</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Newsletter Section -->
+<section class="newsletter-section py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8 text-center">
+                <h2 class="mb-3">Subscribe to Our Newsletter</h2>
+                <p class="text-muted mb-4">Get the latest updates on new products and exclusive offers!</p>
+                <form class="row g-3 justify-content-center">
+                    <div class="col-md-6">
+                        <input type="email" class="form-control form-control-lg" placeholder="Enter your email address" required>
+                    </div>
+                    <div class="col-auto">
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="fas fa-envelope"></i> Subscribe
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

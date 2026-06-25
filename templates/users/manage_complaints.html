@@ -1,0 +1,415 @@
+{% extends 'base.html' %}
+
+{% block title %}Manage Complaints - E-Commerce Store{% endblock %}
+
+{% block content %}
+<style>
+    .manage-container {
+        padding: 40px 20px;
+        background: #f8f9fa;
+        min-height: 100vh;
+    }
+    
+    .page-header {
+        background: white;
+        padding: 30px;
+        border-radius: 16px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        margin-bottom: 30px;
+    }
+    
+    .page-title {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #2d3436;
+        margin-bottom: 10px;
+    }
+    
+    .page-subtitle {
+        color: #636e72;
+        font-size: 1.1rem;
+    }
+    
+    .action-buttons {
+        display: flex;
+        gap: 15px;
+        margin-bottom: 30px;
+        flex-wrap: wrap;
+    }
+    
+    .btn-action {
+        padding: 12px 25px;
+        border-radius: 10px;
+        font-weight: 600;
+        border: none;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        text-decoration: none;
+    }
+    
+    .btn-back {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+    }
+    
+    .btn-back:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        color: white;
+    }
+    
+    .search-box {
+        background: white;
+        padding: 20px;
+        border-radius: 16px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        margin-bottom: 30px;
+    }
+    
+    .search-input {
+        width: 100%;
+        padding: 15px 20px;
+        border: 2px solid #dfe6e9;
+        border-radius: 10px;
+        font-size: 1rem;
+    }
+    
+    .search-input:focus {
+        outline: none;
+        border-color: #667eea;
+    }
+    
+    .filter-section {
+        background: white;
+        padding: 20px;
+        border-radius: 16px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        margin-bottom: 30px;
+    }
+    
+    .filter-buttons {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+    
+    .filter-btn {
+        padding: 10px 20px;
+        border: 2px solid #dfe6e9;
+        background: white;
+        border-radius: 10px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    
+    .filter-btn:hover,
+    .filter-btn.active {
+        background: linear-gradient(135deg, #ffd60a 0%, #ffc300 100%);
+        color: white;
+        border-color: #ffd60a;
+    }
+    
+    .complaints-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+        gap: 25px;
+    }
+    
+    .complaint-card {
+        background: white;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        transition: all 0.3s ease;
+    }
+    
+    .complaint-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+    }
+    
+    .complaint-header {
+        background: linear-gradient(135deg, #ffd60a 0%, #ffc300 100%);
+        padding: 20px;
+        color: #2d3436;
+    }
+    
+    .complaint-id {
+        font-size: 1.2rem;
+        font-weight: 700;
+        margin-bottom: 5px;
+    }
+    
+    .complaint-date {
+        font-size: 0.9rem;
+        opacity: 0.8;
+    }
+    
+    .complaint-info {
+        padding: 20px;
+    }
+    
+    .complaint-subject {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: #2d3436;
+        margin-bottom: 12px;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+    
+    .complaint-message {
+        color: #636e72;
+        margin-bottom: 15px;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        line-height: 1.6;
+    }
+    
+    .complaint-detail {
+        display: flex;
+        justify-content: space-between;
+        padding: 10px 0;
+        border-top: 1px solid #f1f3f5;
+    }
+    
+    .detail-label {
+        font-weight: 600;
+        color: #636e72;
+    }
+    
+    .detail-value {
+        color: #2d3436;
+        font-weight: 600;
+    }
+    
+    .complaint-status {
+        display: inline-block;
+        padding: 6px 14px;
+        border-radius: 12px;
+        font-size: 0.85rem;
+        font-weight: 700;
+    }
+    
+    .status-pending {
+        background: #fff3cd;
+        color: #856404;
+    }
+    
+    .status-replied {
+        background: #d4edda;
+        color: #155724;
+    }
+    
+    .status-resolved {
+        background: #cfe2ff;
+        color: #084298;
+    }
+    
+    .urgent-badge {
+        display: inline-block;
+        background: #ff6b6b;
+        color: white;
+        padding: 4px 10px;
+        border-radius: 12px;
+        font-size: 0.75rem;
+        font-weight: 700;
+        margin-left: 8px;
+    }
+    
+    .complaint-image {
+        width: 100%;
+        height: 150px;
+        object-fit: cover;
+        margin-bottom: 15px;
+        border-radius: 8px;
+    }
+    
+    .complaint-actions {
+        padding: 0 20px 20px;
+        display: flex;
+        gap: 10px;
+    }
+    
+    .btn-view {
+        flex: 1;
+        padding: 12px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        text-align: center;
+    }
+    
+    .btn-view:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        color: white;
+    }
+    
+    .empty-state {
+        text-align: center;
+        padding: 80px 20px;
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    
+    .empty-icon {
+        font-size: 80px;
+        color: #dfe6e9;
+        margin-bottom: 20px;
+    }
+    
+    .empty-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #2d3436;
+        margin-bottom: 10px;
+    }
+</style>
+
+<div class="manage-container">
+    <div class="container">
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1 class="page-title">⚠️ Manage Complaints</h1>
+            <p class="page-subtitle">View and respond to customer complaints</p>
+        </div>
+        
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+            <a href="{% url 'users:dashboard' %}" class="btn-action btn-back">
+                <i class="fas fa-arrow-left"></i> Back to Dashboard
+            </a>
+        </div>
+        
+        <!-- Search Box -->
+        <div class="search-box">
+            <input type="text" class="search-input" id="searchInput" placeholder="🔍 Search complaints by subject or username...">
+        </div>
+        
+        <!-- Filter Section -->
+        <div class="filter-section">
+            <div class="filter-buttons">
+                <button class="filter-btn active" data-filter="all">All Complaints</button>
+                <button class="filter-btn" data-filter="pending">Pending</button>
+                <button class="filter-btn" data-filter="replied">Replied</button>
+                <button class="filter-btn" data-filter="resolved">Resolved</button>
+                <button class="filter-btn" data-filter="urgent">Urgent</button>
+            </div>
+        </div>
+        
+        <!-- Complaints Grid -->
+        <div class="complaints-grid" id="complaintsGrid">
+            {% for complaint in complaints %}
+            <div class="complaint-card" data-search="{{ complaint.subject|lower }} {{ complaint.user.username|lower }}" data-status="{{ complaint.status }}" data-urgent="{{ complaint.is_urgent }}">
+                <div class="complaint-header">
+                    <div class="complaint-id">
+                        Complaint #{{ complaint.id }}
+                        {% if complaint.is_urgent %}
+                        <span class="urgent-badge">URGENT</span>
+                        {% endif %}
+                    </div>
+                    <div class="complaint-date">{{ complaint.created_at|date:"F d, Y - h:i A" }}</div>
+                </div>
+                <div class="complaint-info">
+                    {% if complaint.image %}
+                    <img src="{{ complaint.image.url }}" alt="Complaint Image" class="complaint-image">
+                    {% endif %}
+                    
+                    <h3 class="complaint-subject">{{ complaint.subject }}</h3>
+                    <p class="complaint-message">{{ complaint.message }}</p>
+                    
+                    <div class="complaint-detail">
+                        <span class="detail-label">User:</span>
+                        <span class="detail-value">{{ complaint.user.username }}</span>
+                    </div>
+                    <div class="complaint-detail">
+                        <span class="detail-label">Status:</span>
+                        <span class="detail-value">
+                            <span class="complaint-status status-{{ complaint.status }}">
+                                {{ complaint.get_status_display }}
+                            </span>
+                        </span>
+                    </div>
+                    {% if complaint.replied_at %}
+                    <div class="complaint-detail">
+                        <span class="detail-label">Replied:</span>
+                        <span class="detail-value">{{ complaint.replied_at|date:"M d, Y" }}</span>
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="complaint-actions">
+                    <a href="/admin/users/complaint/{{ complaint.id }}/change/" class="btn-view">
+                        <i class="fas fa-eye"></i> View & Reply
+                    </a>
+                </div>
+            </div>
+            {% empty %}
+            <div class="empty-state">
+                <div class="empty-icon">✅</div>
+                <h3 class="empty-title">No Complaints</h3>
+                <p style="color: #636e72;">All complaints have been resolved</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<script>
+    // Search functionality
+    document.getElementById('searchInput').addEventListener('input', function(e) {
+        const searchTerm = e.target.value.toLowerCase();
+        const complaints = document.querySelectorAll('.complaint-card');
+        
+        complaints.forEach(complaint => {
+            const searchData = complaint.getAttribute('data-search');
+            if (searchData.includes(searchTerm)) {
+                complaint.style.display = 'block';
+            } else {
+                complaint.style.display = 'none';
+            }
+        });
+    });
+    
+    // Filter functionality
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            // Update active button
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            
+            const filter = this.getAttribute('data-filter');
+            const complaints = document.querySelectorAll('.complaint-card');
+            
+            complaints.forEach(complaint => {
+                const status = complaint.getAttribute('data-status');
+                const isUrgent = complaint.getAttribute('data-urgent') === 'True';
+                
+                if (filter === 'all') {
+                    complaint.style.display = 'block';
+                } else if (filter === 'urgent' && isUrgent) {
+                    complaint.style.display = 'block';
+                } else if (status === filter) {
+                    complaint.style.display = 'block';
+                } else {
+                    complaint.style.display = 'none';
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}

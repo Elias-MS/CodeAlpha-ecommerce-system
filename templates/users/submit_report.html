@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+
+{% block title %}Submit Report - E-Commerce Store{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-lg">
+                <div class="card-header bg-warning text-dark text-center">
+                    <h3><i class="fas fa-exclamation-triangle"></i> Account Issue Report</h3>
+                </div>
+                <div class="card-body p-4">
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle"></i> <strong>Account Deactivated?</strong><br>
+                        If your account has been deactivated or you're experiencing login issues, please submit a report below. Our support team will review your case and get back to you within 24-48 hours.
+                    </div>
+                    
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        <div class="mb-3">
+                            <label for="username" class="form-label">Username *</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-user"></i></span>
+                                <input type="text" class="form-control" id="username" name="username" placeholder="Enter your username" required>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email Address *</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                                <input type="email" class="form-control" id="email" name="email" placeholder="Enter your email" required>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="report_type" class="form-label">Issue Type *</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-list"></i></span>
+                                <select class="form-select" id="report_type" name="report_type" required>
+                                    <option value="">Select issue type...</option>
+                                    <option value="account_deactivated">Account Deactivated</option>
+                                    <option value="cannot_login">Cannot Login</option>
+                                    <option value="technical_issue">Technical Issue</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="message" class="form-label">Describe Your Issue *</label>
+                            <textarea class="form-control" id="message" name="message" rows="6" placeholder="Please provide detailed information about your issue..." required></textarea>
+                            <div class="form-text">
+                                Include any relevant details such as when the issue started, error messages you received, etc.
+                            </div>
+                        </div>
+                        
+                        <div class="alert alert-warning">
+                            <i class="fas fa-shield-alt"></i> <strong>Privacy Notice:</strong> Your information will only be used to resolve your account issue and will be handled according to our privacy policy.
+                        </div>
+                        
+                        <button type="submit" class="btn btn-warning btn-lg w-100 mb-3">
+                            <i class="fas fa-paper-plane"></i> Submit Report
+                        </button>
+                        
+                        <div class="text-center">
+                            <a href="{% url 'users:login' %}" class="btn btn-link">
+                                <i class="fas fa-arrow-left"></i> Back to Login
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- Additional Help -->
+            <div class="card shadow mt-4">
+                <div class="card-body">
+                    <h5><i class="fas fa-question-circle text-primary"></i> Need Immediate Help?</h5>
+                    <p class="mb-2">If you need urgent assistance, you can also:</p>
+                    <ul>
+                        <li>Email us at: <strong>support@eshop.com</strong></li>
+                        <li>Call us at: <strong>+1 (555) 123-4567</strong></li>
+                        <li>Visit our <a href="{% url 'users:contact_us' %}">Contact Us</a> page</li>
+                    </ul>
+                    <p class="text-muted small mb-0">
+                        <i class="fas fa-clock"></i> Support hours: Monday-Friday, 9:00 AM - 6:00 PM
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

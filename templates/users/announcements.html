@@ -1,0 +1,156 @@
+{% extends 'base.html' %}
+
+{% block title %}Announcements - E-Commerce Store{% endblock %}
+
+{% block content %}
+<style>
+    .category-badge {
+        display: inline-block;
+        padding: 5px 12px;
+        border-radius: 12px;
+        font-size: 0.85rem;
+        font-weight: 600;
+    }
+    
+    .category-general {
+        background: #e3f2fd;
+        color: #1976d2;
+    }
+    
+    .category-new_product {
+        background: #e8f5e9;
+        color: #388e3c;
+    }
+    
+    .category-order {
+        background: #fff3e0;
+        color: #f57c00;
+    }
+    
+    .category-promotion {
+        background: #fce4ec;
+        color: #c2185b;
+    }
+    
+    .category-maintenance {
+        background: #fff9c4;
+        color: #f57f17;
+    }
+    
+    .category-important {
+        background: #ffebee;
+        color: #c62828;
+    }
+    
+    .filter-section {
+        background: white;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        margin-bottom: 30px;
+    }
+    
+    .category-select {
+        padding: 10px 15px;
+        border: 2px solid #dfe6e9;
+        border-radius: 8px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    
+    .category-select:focus {
+        outline: none;
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+</style>
+
+<div class="container my-5">
+    <div class="row">
+        <div class="col-12">
+            <div class="text-center mb-4">
+                <h2><i class="fas fa-bullhorn"></i> Important Announcements</h2>
+                <p class="text-muted">Updates and important information from our team</p>
+            </div>
+            
+            <!-- Category Filter -->
+            <div class="filter-section">
+                <form method="get" action="{% url 'users:announcements' %}" class="d-flex align-items-center gap-3">
+                    <label for="category" class="mb-0 fw-bold">
+                        <i class="fas fa-filter"></i> Filter by Category:
+                    </label>
+                    <select name="category" id="category" class="category-select flex-grow-1" onchange="this.form.submit()">
+                        <option value="all" {% if selected_category == 'all' %}selected{% endif %}>All Categories</option>
+                        {% for value, label in categories %}
+                        <option value="{{ value }}" {% if selected_category == value %}selected{% endif %}>{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                </form>
+            </div>
+
+            {% if announcements %}
+                <div class="row">
+                    {% for announcement in announcements %}
+                    <div class="col-md-6 mb-4">
+                        <div class="card h-100 shadow-sm">
+                            <div class="card-header bg-gradient" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+                                <h5 class="mb-0">
+                                    <i class="fas fa-megaphone"></i> {{ announcement.title }}
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="mb-3 d-flex justify-content-between align-items-center">
+                                    <small class="text-muted">
+                                        <i class="fas fa-calendar"></i> {{ announcement.created_at|date:"F d, Y" }}
+                                    </small>
+                                    <span class="category-badge category-{{ announcement.category }}">
+                                        {{ announcement.get_category_display }}
+                                    </span>
+                                </div>
+                                
+                                <div class="announcement-content" style="white-space: pre-wrap; line-height: 1.6;">
+                                    {{ announcement.content }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="card">
+                    <div class="card-body text-center py-5">
+                        <i class="fas fa-inbox fa-4x text-muted mb-3"></i>
+                        <h4>No Announcements Yet</h4>
+                        <p class="text-muted">There are no announcements in this category at this time.</p>
+                        <a href="{% url 'users:announcements' %}" class="btn btn-primary">
+                            <i class="fas fa-list"></i> View All Announcements
+                        </a>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Info Section -->
+    <div class="row mt-5">
+        <div class="col-12">
+            <div class="card bg-light">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="fas fa-info-circle"></i> About Announcements</h5>
+                    <p class="card-text">
+                        Stay updated with the latest news, product launches, promotions, and important information 
+                        from our team. We regularly post announcements to keep you informed about everything 
+                        happening in our store.
+                    </p>
+                    <p class="card-text mb-0">
+                        Have feedback or concerns? 
+                        <a href="{% url 'users:submit_complaint' %}">Submit a complaint</a> and our team will respond privately!
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

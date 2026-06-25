@@ -1,0 +1,580 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ product.name }} - E-Commerce Store{% endblock %}
+
+{% block content %}
+<style>
+    /* Modern Product Detail Styles */
+    .product-detail-container {
+        padding: 40px 0;
+    }
+    
+    .product-image-card {
+        border: none;
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+        background: white;
+        position: sticky;
+        top: 100px;
+    }
+    
+    .product-image-card img {
+        width: 100%;
+        height: auto;
+        object-fit: cover;
+    }
+    
+    .product-info-card {
+        background: white;
+        border-radius: 20px;
+        padding: 40px;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+    }
+    
+    .product-name {
+        font-size: 2.2rem;
+        font-weight: 700;
+        color: #2d3436;
+        margin-bottom: 20px;
+        line-height: 1.3;
+    }
+    
+    .product-badges {
+        margin-bottom: 25px;
+    }
+    
+    .badge-category {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        font-weight: 600;
+    }
+    
+    .badge-rating {
+        background: #ffeaa7;
+        color: #2d3436;
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        font-weight: 600;
+    }
+    
+    .product-price-large {
+        font-size: 3rem;
+        font-weight: 800;
+        color: #ff6b35;
+        margin-bottom: 25px;
+    }
+    
+    .availability-section {
+        background: #f8f9fa;
+        padding: 20px;
+        border-radius: 12px;
+        margin-bottom: 25px;
+    }
+    
+    .availability-section strong {
+        font-weight: 700;
+        color: #2d3436;
+    }
+    
+    .stock-available {
+        color: #00b894;
+        font-weight: 600;
+    }
+    
+    .stock-unavailable {
+        color: #d63031;
+        font-weight: 600;
+    }
+    
+    .description-section {
+        margin-bottom: 30px;
+    }
+    
+    .description-section h5 {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: #2d3436;
+        margin-bottom: 15px;
+    }
+    
+    .description-section p {
+        color: #636e72;
+        font-size: 1.05rem;
+        line-height: 1.7;
+    }
+    
+    .quantity-selector {
+        margin-bottom: 25px;
+    }
+    
+    .quantity-selector label {
+        font-weight: 700;
+        color: #2d3436;
+        font-size: 1.1rem;
+        margin-bottom: 10px;
+    }
+    
+    .quantity-selector input {
+        border: 2px solid #dfe6e9;
+        border-radius: 10px;
+        padding: 12px 20px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        width: 120px;
+    }
+    
+    .quantity-selector input:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.15);
+    }
+    
+    .btn-add-to-cart {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border: none;
+        padding: 18px 40px;
+        border-radius: 12px;
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: white;
+        transition: all 0.3s ease;
+        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3);
+    }
+    
+    .btn-add-to-cart:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        color: white;
+    }
+    
+    .btn-login {
+        background: linear-gradient(135deg, #00b894 0%, #00cec9 100%);
+        border: none;
+        padding: 18px 40px;
+        border-radius: 12px;
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: white;
+        transition: all 0.3s ease;
+        box-shadow: 0 6px 20px rgba(0, 184, 148, 0.3);
+    }
+    
+    .btn-login:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 30px rgba(0, 184, 148, 0.4);
+        color: white;
+    }
+    
+    .admin-alert {
+        background: linear-gradient(135deg, #74b9ff 0%, #a29bfe 100%);
+        border: none;
+        border-radius: 12px;
+        padding: 20px;
+        color: white;
+    }
+    
+    .admin-alert .btn {
+        background: white;
+        color: #667eea;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-weight: 600;
+    }
+    
+    /* Reviews Section */
+    .reviews-section {
+        margin-top: 60px;
+    }
+    
+    .section-title {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #2d3436;
+        margin-bottom: 30px;
+    }
+    
+    .review-form-card {
+        background: white;
+        border: none;
+        border-radius: 16px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        margin-bottom: 30px;
+    }
+    
+    .review-form-card .card-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border-radius: 16px 16px 0 0;
+        padding: 20px 25px;
+        border: none;
+    }
+    
+    .review-form-card .card-header h5 {
+        margin: 0;
+        font-weight: 700;
+    }
+    
+    .review-form-card .card-body {
+        padding: 30px;
+    }
+    
+    .review-form-card .form-label {
+        font-weight: 600;
+        color: #2d3436;
+        margin-bottom: 10px;
+    }
+    
+    .review-form-card .form-select,
+    .review-form-card .form-control {
+        border: 2px solid #dfe6e9;
+        border-radius: 10px;
+        padding: 12px 16px;
+    }
+    
+    .review-form-card .form-select:focus,
+    .review-form-card .form-control:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.15);
+    }
+    
+    .review-form-card .btn {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border: none;
+        padding: 12px 30px;
+        border-radius: 10px;
+        font-weight: 600;
+        color: white;
+    }
+    
+    .review-card {
+        background: white;
+        border: none;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        margin-bottom: 20px;
+        transition: all 0.3s ease;
+    }
+    
+    .review-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    
+    .review-card .card-body {
+        padding: 25px;
+    }
+    
+    .review-author {
+        font-weight: 700;
+        color: #2d3436;
+        font-size: 1.1rem;
+    }
+    
+    .review-date {
+        color: #636e72;
+        font-size: 0.9rem;
+    }
+    
+    .review-rating {
+        background: #ffeaa7;
+        color: #2d3436;
+        padding: 6px 12px;
+        border-radius: 12px;
+        font-weight: 600;
+    }
+    
+    .review-comment {
+        color: #2d3436;
+        line-height: 1.6;
+        margin: 0;
+    }
+    
+    .no-reviews-alert {
+        background: #f8f9fa;
+        border: 2px dashed #dfe6e9;
+        border-radius: 12px;
+        padding: 30px;
+        text-align: center;
+        color: #636e72;
+    }
+    
+    /* Related Products */
+    .related-products-section {
+        margin-top: 60px;
+    }
+    
+    .related-product-card {
+        border: none;
+        border-radius: 16px;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        background: white;
+    }
+    
+    .related-product-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 12px 28px rgba(0,0,0,0.15);
+    }
+    
+    .related-product-card img {
+        height: 200px;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+    }
+    
+    .related-product-card:hover img {
+        transform: scale(1.08);
+    }
+    
+    .related-product-card .card-body {
+        padding: 20px;
+    }
+    
+    .related-product-card .card-title {
+        font-size: 1rem;
+        font-weight: 600;
+        color: #2d3436;
+        height: 48px;
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+    }
+    
+    .related-product-card .text-primary {
+        color: #ff6b35 !important;
+        font-weight: 700;
+        font-size: 1.3rem;
+    }
+    
+    .related-product-card .card-footer {
+        background: transparent;
+        border: none;
+        padding: 0 20px 20px;
+    }
+    
+    .related-product-card .btn {
+        width: 100%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border: none;
+        padding: 10px;
+        border-radius: 8px;
+        font-weight: 600;
+        color: white;
+        transition: all 0.3s ease;
+    }
+    
+    .related-product-card .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        color: white;
+    }
+    
+    /* Breadcrumb */
+    .breadcrumb-modern {
+        background: white;
+        padding: 15px 25px;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        margin-bottom: 30px;
+    }
+    
+    .breadcrumb-modern a {
+        color: #667eea;
+        text-decoration: none;
+        font-weight: 500;
+    }
+    
+    .breadcrumb-modern a:hover {
+        color: #764ba2;
+    }
+</style>
+
+<div class="container product-detail-container">
+    <div class="row">
+        <div class="col-12">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb breadcrumb-modern">
+                    <li class="breadcrumb-item"><a href="{% url 'products:home' %}"><i class="fas fa-home"></i> Home</a></li>
+                    <li class="breadcrumb-item"><a href="{% url 'products:product_list' %}">Products</a></li>
+                    <li class="breadcrumb-item active">{{ product.name }}</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+    
+    <div class="row">
+        <!-- Product Image -->
+        <div class="col-md-6 mb-4">
+            <div class="product-image-card">
+                <img src="{{ product.image.url }}" alt="{{ product.name }}">
+            </div>
+        </div>
+        
+        <!-- Product Details -->
+        <div class="col-md-6">
+            <div class="product-info-card">
+                <h1 class="product-name">{{ product.name }}</h1>
+                
+                <div class="product-badges">
+                    <span class="badge-category">{{ product.category.name }}</span>
+                    <span class="badge-rating ms-2">
+                        <i class="fas fa-star"></i> {{ product.rating }}
+                    </span>
+                </div>
+                
+                <div class="product-price-large" data-price="{{ product.price }}" data-price-id="product-{{ product.id }}-detail">
+                    {{ CURRENCY_SYMBOL }}{{ product.price }}
+                </div>
+                
+                <div class="availability-section">
+                    <strong><i class="fas fa-box me-2"></i>Availability:</strong>
+                    {% if product.is_available %}
+                    <span class="stock-available">
+                        <i class="fas fa-check-circle"></i> In Stock ({{ product.stock }} available)
+                    </span>
+                    {% else %}
+                    <span class="stock-unavailable">
+                        <i class="fas fa-times-circle"></i> Out of Stock
+                    </span>
+                    {% endif %}
+                </div>
+                
+                <div class="description-section">
+                    <h5><i class="fas fa-info-circle me-2"></i>Description</h5>
+                    <p>{{ product.description }}</p>
+                </div>
+                
+                {% if product.is_available %}
+                {% if not user.is_staff and not user.is_superuser %}
+                <form method="post" action="{% url 'cart:add_to_cart' product.pk %}">
+                    {% csrf_token %}
+                    <div class="quantity-selector">
+                        <label for="quantity"><i class="fas fa-shopping-basket me-2"></i>Quantity:</label>
+                        <input type="number" class="form-control" id="quantity" name="quantity" value="1" min="1" max="{{ product.stock }}">
+                    </div>
+                    
+                    {% if user.is_authenticated %}
+                    <button type="submit" class="btn btn-add-to-cart">
+                        <i class="fas fa-shopping-cart me-2"></i> Add to Cart
+                    </button>
+                    {% else %}
+                    <a href="{% url 'users:login' %}?next={{ request.path }}" class="btn btn-login">
+                        <i class="fas fa-sign-in-alt me-2"></i> Login to Purchase
+                    </a>
+                    {% endif %}
+                </form>
+                {% else %}
+                <div class="alert admin-alert">
+                    <i class="fas fa-info-circle me-2"></i> <strong>Admin View:</strong> You are viewing this product as an administrator. Admins cannot place orders.
+                    <br><a href="/admin/products/product/{{ product.id }}/change/" class="btn mt-3">
+                        <i class="fas fa-edit me-2"></i> Edit Product in Admin Panel
+                    </a>
+                </div>
+                {% endif %}
+                {% else %}
+                <button class="btn btn-secondary btn-lg" disabled style="padding: 18px 40px; border-radius: 12px; font-size: 1.2rem; font-weight: 700;">
+                    <i class="fas fa-ban me-2"></i> Out of Stock
+                </button>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <!-- Reviews Section -->
+    <div class="row reviews-section">
+        <div class="col-12">
+            <h4 class="section-title"><i class="fas fa-comments me-2"></i>Customer Reviews</h4>
+            
+            {% if user.is_authenticated %}
+            <div class="review-form-card">
+                <div class="card-header">
+                    <h5><i class="fas fa-pen me-2"></i>Write a Review</h5>
+                </div>
+                <div class="card-body">
+                    <form method="post" action="{% url 'products:add_review' product.pk %}">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="rating" class="form-label">Rating</label>
+                            <select class="form-select" id="rating" name="rating" required>
+                                <option value="">Select Rating</option>
+                                <option value="5">⭐⭐⭐⭐⭐ Excellent</option>
+                                <option value="4">⭐⭐⭐⭐ Good</option>
+                                <option value="3">⭐⭐⭐ Average</option>
+                                <option value="2">⭐⭐ Poor</option>
+                                <option value="1">⭐ Terrible</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="comment" class="form-label">Comment</label>
+                            <textarea class="form-control" id="comment" name="comment" rows="4" placeholder="Share your experience with this product..." required></textarea>
+                        </div>
+                        <button type="submit" class="btn">
+                            <i class="fas fa-paper-plane me-2"></i> Submit Review
+                        </button>
+                    </form>
+                </div>
+            </div>
+            {% endif %}
+            
+            {% for review in reviews %}
+            <div class="review-card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <div>
+                            <h6 class="review-author mb-1">{{ review.user.username }}</h6>
+                            <p class="review-date mb-0">{{ review.created_at|date:"F d, Y" }}</p>
+                        </div>
+                        <span class="review-rating">
+                            <i class="fas fa-star"></i> {{ review.rating }}
+                        </span>
+                    </div>
+                    <p class="review-comment mt-3">{{ review.comment }}</p>
+                </div>
+            </div>
+            {% empty %}
+            <div class="no-reviews-alert">
+                <i class="fas fa-info-circle fa-3x mb-3" style="color: #b2bec3;"></i>
+                <h5 style="color: #2d3436;">No reviews yet</h5>
+                <p class="mb-0">Be the first to review this product!</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    
+    <!-- Related Products -->
+    {% if related_products %}
+    <div class="row related-products-section">
+        <div class="col-12">
+            <h4 class="section-title"><i class="fas fa-th-large me-2"></i>Related Products</h4>
+            <div class="row g-4">
+                {% for related in related_products %}
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6">
+                    <div class="card related-product-card h-100">
+                        <div style="overflow: hidden;">
+                            <img src="{{ related.image.url }}" class="card-img-top" alt="{{ related.name }}">
+                        </div>
+                        <div class="card-body">
+                            <h6 class="card-title">{{ related.name }}</h6>
+                            <p class="text-primary mb-0">{{ CURRENCY_SYMBOL }}{{ related.price }}</p>
+                        </div>
+                        <div class="card-footer">
+                            <a href="{% url 'products:product_detail' related.pk %}" class="btn">
+                                <i class="fas fa-eye me-2"></i>View Details
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

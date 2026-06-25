@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fix Database Error - Click Here!</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+            padding: 40px 20px;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .container {
+            max-width: 800px;
+            background: white;
+            border-radius: 30px;
+            padding: 60px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            text-align: center;
+        }
+        
+        .error-icon {
+            font-size: 100px;
+            margin-bottom: 30px;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        
+        h1 {
+            font-size: 3rem;
+            color: #2d3436;
+            margin-bottom: 20px;
+        }
+        
+        .error-message {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 30px 0;
+            font-family: 'Courier New', monospace;
+            color: #856404;
+            font-size: 1.1rem;
+        }
+        
+        .solution-box {
+            background: #d4edda;
+            border: 3px solid #28a745;
+            border-radius: 16px;
+            padding: 40px;
+            margin: 40px 0;
+        }
+        
+        .solution-title {
+            font-size: 2rem;
+            color: #155724;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+        
+        .step {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 20px 0;
+            text-align: left;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .step-number {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            line-height: 40px;
+            text-align: center;
+            font-weight: 700;
+            font-size: 1.3rem;
+            margin-right: 15px;
+        }
+        
+        .step-text {
+            display: inline-block;
+            vertical-align: middle;
+            font-size: 1.2rem;
+            color: #2d3436;
+            font-weight: 600;
+        }
+        
+        .big-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #00b894 0%, #00cec9 100%);
+            color: white;
+            padding: 25px 60px;
+            border-radius: 16px;
+            text-decoration: none;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 30px 0;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 20px rgba(0, 184, 148, 0.4);
+        }
+        
+        .big-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px rgba(0, 184, 148, 0.6);
+        }
+        
+        .command-box {
+            background: #2d3436;
+            color: #00ff00;
+            padding: 20px;
+            border-radius: 12px;
+            font-family: 'Courier New', monospace;
+            text-align: left;
+            margin: 20px 0;
+            font-size: 1.1rem;
+            overflow-x: auto;
+        }
+        
+        .note {
+            background: #e3f2fd;
+            border-left: 5px solid #2196f3;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            text-align: left;
+        }
+        
+        .note-title {
+            font-weight: 700;
+            color: #1976d2;
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="error-icon">⚠️</div>
+        <h1>Database Error Detected!</h1>
+        
+        <div class="error-message">
+            OperationalError at /orders/manage/<br>
+            no such column: products_product.is_active
+        </div>
+        
+        <div class="solution-box">
+            <div class="solution-title">✅ QUICK FIX (2 Steps)</div>
+            
+            <div class="step">
+                <span class="step-number">1</span>
+                <span class="step-text">Double-click this file:</span>
+                <div class="command-box">
+                    FIX_DATABASE.bat
+                </div>
+                <div style="color: #636e72; margin-top: 10px;">
+                    📁 Location: c:\xampp\htdocs\Simple E-commerce Store\
+                </div>
+            </div>
+            
+            <div class="step">
+                <span class="step-number">2</span>
+                <span class="step-text">Wait for server to start, then refresh browser</span>
+                <div style="color: #636e72; margin-top: 10px;">
+                    🌐 Go to: http://127.0.0.1:8000/orders/manage/
+                </div>
+            </div>
+        </div>
+        
+        <div class="note">
+            <div class="note-title">📝 What This Fix Does:</div>
+            <ul style="margin-left: 20px; line-height: 1.8;">
+                <li>Adds <code>is_active</code> column to products table</li>
+                <li>Sets all existing products to active</li>
+                <li>Starts the Django server</li>
+                <li>Fixes the error completely!</li>
+            </ul>
+        </div>
+        
+        <div style="margin-top: 40px; padding-top: 40px; border-top: 2px solid #e9ecef;">
+            <h2 style="color: #2d3436; margin-bottom: 20px;">Alternative: Manual Fix</h2>
+            <p style="color: #636e72; margin-bottom: 20px;">If batch file doesn't work, open NEW PowerShell and run:</p>
+            <div class="command-box">
+cd "c:\xampp\htdocs\Simple E-commerce Store"<br>
+C:\Users\User\AppData\Local\Python\bin\python.exe add_is_active_column.py<br>
+C:\Users\User\AppData\Local\Python\bin\python.exe manage.py runserver
+            </div>
+        </div>
+        
+        <div style="margin-top: 40px; font-size: 1.2rem; color: #636e72;">
+            After fix, all features will work:
+            <div style="margin-top: 15px;">
+                ✅ Orders Management<br>
+                ✅ Products Management<br>
+                ✅ Active/Deactive Toggle<br>
+                ✅ All Features!
+            </div>
+        </div>
+    </div>
+</body>
+</html>

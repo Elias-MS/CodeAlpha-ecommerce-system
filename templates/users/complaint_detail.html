@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+
+{% block title %}Complaint Details - E-Commerce Store{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="mb-3">
+                <a href="{% url 'users:my_complaints' %}" class="btn btn-outline-secondary">
+                    <i class="fas fa-arrow-left"></i> Back to My Complaints
+                </a>
+            </div>
+
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h3><i class="fas fa-file-alt"></i> Complaint Details</h3>
+                </div>
+                <div class="card-body">
+                    <!-- Status Badge -->
+                    <div class="mb-3">
+                        <span class="badge bg-secondary me-2">{{ complaint.get_complaint_type_display }}</span>
+                        <span class="badge 
+                            {% if complaint.status == 'pending' %}bg-warning text-dark
+                            {% elif complaint.status == 'under_review' %}bg-info
+                            {% elif complaint.status == 'resolved' %}bg-success
+                            {% else %}bg-secondary{% endif %}">
+                            {{ complaint.get_status_display }}
+                        </span>
+                        {% if complaint.is_announced %}
+                        <span class="badge bg-info ms-2">
+                            <i class="fas fa-bullhorn"></i> Publicly Announced
+                        </span>
+                        {% endif %}
+                    </div>
+
+                    <!-- Subject -->
+                    <h4 class="mb-3">{{ complaint.subject }}</h4>
+
+                    <!-- Complaint Message -->
+                    <div class="card mb-3">
+                        <div class="card-header">
+                            <strong><i class="fas fa-user"></i> Your Complaint</strong>
+                            <small class="text-muted float-end">
+                                <i class="fas fa-calendar"></i> {{ complaint.created_at|date:"F d, Y - h:i A" }}
+                            </small>
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text" style="white-space: pre-wrap;">{{ complaint.message }}</p>
+                            
+                            {% if complaint.image %}
+                            <div class="mt-3">
+                                <strong>Attached Image:</strong><br>
+                                <img src="{{ complaint.image.url }}" alt="Complaint Image" 
+                                     class="img-fluid rounded mt-2" style="max-width: 100%; max-height: 400px;">
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <!-- Admin Reply -->
+                    {% if complaint.admin_reply %}
+                    <div class="card border-success">
+                        <div class="card-header bg-success text-white">
+                            <strong><i class="fas fa-user-shield"></i> Admin Response</strong>
+                            {% if complaint.replied_at %}
+                            <small class="float-end">
+                                <i class="fas fa-calendar"></i> {{ complaint.replied_at|date:"F d, Y - h:i A" }}
+                            </small>
+                            {% endif %}
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text" style="white-space: pre-wrap;">{{ complaint.admin_reply }}</p>
+                        </div>
+                    </div>
+                    {% else %}
+                    <div class="alert alert-info">
+                        <i class="fas fa-clock"></i> 
+                        <strong>Waiting for admin response...</strong>
+                        <p class="mb-0 mt-2">Our team is reviewing your complaint and will respond soon.</p>
+                    </div>
+                    {% endif %}
+
+                    <!-- Announcement Notice -->
+                    {% if complaint.is_announced %}
+                    <div class="alert alert-info mt-3">
+                        <i class="fas fa-bullhorn"></i> 
+                        <strong>This complaint has been announced publicly</strong>
+                        <p class="mb-0 mt-2">
+                            Your complaint was found to be useful for other customers and has been shared as a public announcement.
+                            <a href="{% url 'users:announcements' %}" class="alert-link">View Announcements</a>
+                        </p>
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="card-footer bg-transparent">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <small class="text-muted">
+                                <i class="fas fa-info-circle"></i> Complaint ID: #{{ complaint.id }}
+                            </small>
+                        </div>
+                        <div class="col-md-6 text-end">
+                            <small class="text-muted">
+                                Last updated: {{ complaint.updated_at|date:"M d, Y" }}
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

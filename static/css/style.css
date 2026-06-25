@@ -1,0 +1,1098 @@
+/* 🎨 VIBRANT MODERN E-COMMERCE DESIGN SYSTEM */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Montserrat:wght@400;500;600;700;800&display=swap');
+
+:root {
+    /* 🎨 Alibaba-Inspired Professional Color Palette */
+    --bg-base: #ffffff;
+    --bg-surface: #ffffff;
+    --bg-gradient: linear-gradient(135deg, #ff6a00 0%, #ff8c00 100%);
+    
+    /* 🎨 Primary Colors - Alibaba Orange */
+    --primary-color: #ff6a00;          /* Alibaba Orange */
+    --primary-dark: #e65c00;
+    --primary-light: #ff8533;
+    
+    /* 🌟 Accent Colors - Professional */
+    --accent-blue: #1890ff;            /* Professional Blue */
+    --accent-green: #52c41a;           /* Success Green */
+    --accent-red: #f5222d;             /* Alert Red */
+    --accent-gold: #faad14;            /* Gold/Warning */
+    --accent-purple: #722ed1;          /* Premium Purple */
+    --accent-cyan: #13c2c2;            /* Info Cyan */
+    --accent-orange: #ff6a00;          /* Alibaba Orange */
+    --accent-yellow: #faad14;          /* Gold */
+    --accent-pink: #eb2f96;            /* Pink accent */
+    
+    /* 📝 Text Colors */
+    --text-primary: #262626;
+    --text-secondary: #595959;
+    --text-light: #8c8c8c;
+    --text-white: #ffffff;
+    
+    /* 🎭 Background Colors */
+    --bg-gray-1: #fafafa;
+    --bg-gray-2: #f5f5f5;
+    --bg-gray-3: #e8e8e8;
+    --bg-gray-4: #d9d9d9;
+    
+    /* 🎭 Shadows & Effects */
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.06);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+    --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
+    --shadow-xl: 0 12px 48px rgba(0, 0, 0, 0.16);
+    --shadow-orange: 0 4px 16px rgba(255, 106, 0, 0.25);
+    
+    /* 📐 Border Radius */
+    --radius-sm: 4px;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+    --radius-xl: 16px;
+    
+    /* ⚡ Transitions */
+    --transition-smooth: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    --transition-spring: 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* 🎯 Global Reset & Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+    background: #f5f5f5;
+    color: var(--text-primary);
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        linear-gradient(180deg, rgba(255, 106, 0, 0.02) 0%, transparent 100%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+@keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+h1, h2, h3, h4, h5, h6, .navbar-brand {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+}
+
+/* 🎨 Scrollbar Styling */
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+::-webkit-scrollbar-track {
+    background: #f5f5f5;
+    border-radius: 4px;
+}
+::-webkit-scrollbar-thumb {
+    background: var(--primary-color);
+    border-radius: 4px;
+    border: 2px solid #f5f5f5;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: var(--primary-dark);
+}
+
+/* 🎯 Navbar - Alibaba Style */
+.navbar {
+    background: #ffffff !important;
+    backdrop-filter: none !important;
+    border-bottom: 1px solid #e8e8e8 !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06) !important;
+    transition: var(--transition-smooth);
+    position: relative;
+    z-index: 1000;
+    padding: 0.5rem 0 !important;
+}
+
+.navbar-brand {
+    font-size: 1.8rem;
+    color: var(--primary-color) !important;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+}
+
+.navbar-brand i {
+    color: var(--primary-color);
+    filter: drop-shadow(0 2px 4px rgba(255, 106, 0, 0.2));
+}
+
+.nav-link {
+    color: var(--text-primary) !important;
+    font-weight: 500;
+    transition: var(--transition-smooth);
+    position: relative;
+    padding: 0.5rem 1rem !important;
+    font-size: 14px;
+}
+
+.nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 2px;
+    background: var(--primary-color);
+    border-radius: 2px;
+    transition: width var(--transition-smooth);
+}
+
+.nav-link:hover::after {
+    width: 80%;
+}
+
+.nav-link:hover {
+    color: var(--primary-color) !important;
+}
+
+/* 🎨 Hero Section - Alibaba Orange */
+.hero-section {
+    background: linear-gradient(135deg, #ff6a00 0%, #ff8c00 100%) !important;
+    border-bottom: none;
+    position: relative;
+    overflow: hidden;
+    padding: 6rem 0 !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.hero-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+        radial-gradient(circle at 20% 50%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
+}
+
+.hero-section h1 {
+    font-size: 3.5rem;
+    font-weight: 800;
+    color: var(--text-white);
+    margin-bottom: 1.5rem;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    letter-spacing: -1px;
+}
+
+.hero-section p {
+    color: rgba(255, 255, 255, 0.95);
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+}
+
+.hero-section i.fa-shopping-cart {
+    color: var(--text-white);
+    filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.3));
+}
+
+/* 🎴 Cards - Alibaba Clean Style */
+.card, .product-card, .category-card {
+    background: #ffffff !important;
+    backdrop-filter: none !important;
+    border: 1px solid #e8e8e8 !important;
+    border-radius: var(--radius-md) !important;
+    box-shadow: var(--shadow-sm) !important;
+    transition: all var(--transition-smooth);
+    color: var(--text-primary) !important;
+    overflow: hidden;
+    position: relative;
+}
+
+.card::before, .product-card::before {
+    display: none;
+}
+
+.card:hover, .product-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg) !important;
+    border-color: var(--primary-color) !important;
+}
+
+.category-card {
+    background: #ffffff !important;
+    border: 1px solid #e8e8e8 !important;
+}
+
+.category-card::before {
+    display: none;
+}
+
+.category-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-md) !important;
+    border-color: var(--primary-color) !important;
+}
+
+.card-header {
+    background: #fafafa !important;
+    border-bottom: 1px solid #e8e8e8 !important;
+    color: var(--text-primary) !important;
+    font-weight: 600;
+    font-size: 16px;
+}
+
+.card-footer {
+    background: #fafafa !important;
+    border-top: 1px solid #e8e8e8 !important;
+}
+
+/* 🎨 Category Cards - Orange Icons */
+.category-card i {
+    color: var(--primary-color);
+    transition: transform var(--transition-smooth);
+}
+
+.category-card:hover i {
+    transform: scale(1.15);
+    color: var(--primary-dark);
+}
+
+/* 🖼️ Product Cards - Enhanced */
+.product-card img {
+    height: 240px;
+    object-fit: cover;
+    filter: brightness(0.95) contrast(1.05);
+    border-bottom: 2px solid rgba(0, 0, 0, 0.05);
+    transition: transform var(--transition-smooth), filter var(--transition-smooth);
+}
+
+.product-card:hover img {
+    transform: scale(1.08);
+    filter: brightness(1) contrast(1.1);
+}
+
+.product-card .card-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text-primary) !important;
+    margin-bottom: 0.75rem;
+}
+
+.product-card .card-text {
+    color: var(--text-secondary) !important;
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+/* 📝 Form Controls - Modern & Clean */
+.form-control, .form-select {
+    background: #ffffff !important;
+    border: 1px solid #d9d9d9 !important;
+    color: var(--text-primary) !important;
+    border-radius: var(--radius-sm) !important;
+    padding: 0.75rem 1rem !important;
+    transition: all var(--transition-smooth) !important;
+    font-weight: 400;
+}
+
+.form-control:focus, .form-select:focus {
+    background: #ffffff !important;
+    border-color: var(--primary-color) !important;
+    box-shadow: 0 0 0 2px rgba(255, 106, 0, 0.1) !important;
+    outline: none !important;
+}
+
+.form-control::placeholder {
+    color: var(--text-light);
+}
+
+/* 🎯 Buttons - Alibaba Orange Style */
+.btn {
+    border-radius: var(--radius-sm) !important;
+    padding: 0.6rem 1.5rem !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.3px;
+    font-size: 14px;
+    transition: all var(--transition-smooth);
+    position: relative;
+    overflow: hidden;
+    border: none !important;
+}
+
+.btn::before {
+    display: none;
+}
+
+.btn:active {
+    transform: scale(0.98) !important;
+}
+
+.btn-primary {
+    background: var(--primary-color) !important;
+    color: #fff !important;
+    box-shadow: 0 2px 8px rgba(255, 106, 0, 0.25) !important;
+}
+
+.btn-primary:hover {
+    background: var(--primary-dark) !important;
+    box-shadow: var(--shadow-orange) !important;
+}
+
+.btn-success {
+    background: var(--accent-green) !important;
+    color: #fff !important;
+    box-shadow: 0 2px 8px rgba(82, 196, 26, 0.25) !important;
+}
+
+.btn-success:hover {
+    background: #389e0d !important;
+    box-shadow: 0 4px 12px rgba(82, 196, 26, 0.35) !important;
+}
+
+.btn-danger {
+    background: var(--accent-red) !important;
+    color: #fff !important;
+    box-shadow: 0 2px 8px rgba(245, 34, 45, 0.25) !important;
+}
+
+.btn-danger:hover {
+    background: #cf1322 !important;
+    box-shadow: 0 4px 12px rgba(245, 34, 45, 0.35) !important;
+}
+
+.btn-outline-primary {
+    border: 2px solid var(--primary-color) !important;
+    color: var(--primary-color) !important;
+    background: transparent !important;
+    font-weight: 600 !important;
+}
+
+.btn-outline-primary:hover {
+    background: var(--primary-color) !important;
+    color: #fff !important;
+    box-shadow: var(--shadow-orange) !important;
+}
+
+.btn-light {
+    background: #ffffff !important;
+    color: var(--text-primary) !important;
+    border: 1px solid #d9d9d9 !important;
+    box-shadow: var(--shadow-sm) !important;
+}
+
+.btn-light:hover {
+    background: #fafafa !important;
+    border-color: var(--primary-color) !important;
+    color: var(--primary-color) !important;
+}
+
+.btn-dark {
+    background: #262626 !important;
+    color: #ffffff !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
+}
+
+.btn-dark:hover {
+    background: #1a1a1a !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25) !important;
+}
+
+/* 🏷️ Badges - Professional Style */
+.badge {
+    padding: 0.35rem 0.75rem !important;
+    font-weight: 600 !important;
+    font-size: 12px !important;
+    border-radius: 4px !important;
+    letter-spacing: 0.3px;
+}
+
+.bg-warning {
+    background: var(--accent-gold) !important;
+    color: #ffffff !important;
+}
+
+.bg-danger {
+    background: var(--accent-red) !important;
+    color: #ffffff !important;
+}
+
+.bg-success {
+    background: var(--accent-green) !important;
+    color: #ffffff !important;
+}
+
+.bg-info {
+    background: var(--accent-cyan) !important;
+    color: #ffffff !important;
+}
+
+.bg-primary {
+    background: var(--primary-color) !important;
+    color: #ffffff !important;
+}
+
+/* ✨ Features Section */
+.features-section i {
+    color: var(--primary-color);
+}
+
+.feature-icon {
+    box-shadow: var(--shadow-sm);
+    transition: transform var(--transition-smooth);
+    background: #fafafa;
+    border-radius: var(--radius-md);
+    padding: 1.5rem;
+}
+
+.card:hover .feature-icon {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-md);
+}
+
+/* 🎉 Promotional Banner */
+.promo-banner {
+    background: #fff7e6 !important;
+    border-top: 2px solid var(--primary-color);
+    border-bottom: 2px solid var(--primary-color);
+    color: var(--text-primary) !important;
+    padding: 2rem 0;
+}
+
+.promo-banner h3 {
+    font-weight: 700;
+    color: var(--primary-color);
+}
+
+/* 📊 Statistics Section */
+.stats-section {
+    background: #fafafa !important;
+    border-top: 1px solid #e8e8e8;
+    border-bottom: 1px solid #e8e8e8;
+    padding: 3rem 0;
+}
+
+.stats-section h2 {
+    color: var(--text-primary) !important;
+    font-weight: 700;
+}
+
+.stats-section i {
+    color: var(--primary-color);
+    margin-right: 10px;
+}
+
+/* 💬 Testimonials */
+.testimonials-section {
+    background: transparent !important;
+    padding: 4rem 0;
+}
+
+.testimonials-section .card {
+    background: rgba(255, 255, 255, 0.9) !important;
+    border: 2px solid rgba(99, 102, 241, 0.2) !important;
+}
+
+.testimonials-section i.fa-star {
+    color: var(--accent-yellow);
+    filter: drop-shadow(0 2px 8px rgba(251, 191, 36, 0.4));
+}
+
+/* 📋 Table Styling */
+.table {
+    color: var(--text-primary) !important;
+    background: transparent !important;
+    border-collapse: separate;
+    border-spacing: 0 10px;
+}
+
+.table th {
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(168, 85, 247, 0.1) 100%) !important;
+    border-bottom: 2px solid rgba(99, 102, 241, 0.3) !important;
+    color: var(--text-primary);
+    font-weight: 700;
+    padding: 1.25rem !important;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+}
+
+.table td {
+    background: rgba(255, 255, 255, 0.9) !important;
+    border-top: 1px solid rgba(0, 0, 0, 0.05) !important;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05) !important;
+    padding: 1.5rem 1.25rem !important;
+    vertical-align: middle;
+}
+
+.table td:first-child {
+    border-left: 1px solid rgba(0, 0, 0, 0.05);
+    border-top-left-radius: var(--radius-sm);
+    border-bottom-left-radius: var(--radius-sm);
+}
+
+.table td:last-child {
+    border-right: 1px solid rgba(0, 0, 0, 0.05);
+    border-top-right-radius: var(--radius-sm);
+    border-bottom-right-radius: var(--radius-sm);
+}
+
+.table tbody tr {
+    transition: transform var(--transition-smooth), box-shadow var(--transition-smooth);
+}
+
+.table tbody tr:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* 🔔 Alerts - Modern & Colorful */
+.alert {
+    background: rgba(255, 255, 255, 0.95) !important;
+    backdrop-filter: blur(10px);
+    border: 2px solid !important;
+    color: var(--text-primary) !important;
+    box-shadow: var(--shadow-md) !important;
+    border-radius: var(--radius-md) !important;
+    padding: 1.25rem 1.5rem !important;
+    font-weight: 500;
+}
+
+.alert-success {
+    border-color: var(--accent-green) !important;
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(5, 150, 105, 0.05) 100%) !important;
+}
+
+.alert-danger {
+    border-color: #ef4444 !important;
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(220, 38, 38, 0.05) 100%) !important;
+}
+
+.alert-warning {
+    border-color: var(--accent-yellow) !important;
+    background: linear-gradient(135deg, rgba(251, 191, 36, 0.1) 0%, rgba(245, 158, 11, 0.05) 100%) !important;
+}
+
+.alert-info {
+    border-color: var(--accent-cyan) !important;
+    background: linear-gradient(135deg, rgba(6, 182, 212, 0.1) 0%, rgba(8, 145, 178, 0.05) 100%) !important;
+}
+
+/* 🦶 Footer */
+footer {
+    background: #262626 !important;
+    border-top: none !important;
+    color: rgba(255, 255, 255, 0.85);
+    padding: 3rem 0 1.5rem;
+}
+
+footer h5 {
+    color: #ffffff;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    font-size: 16px;
+}
+
+footer p, footer li a {
+    color: rgba(255, 255, 255, 0.65) !important;
+    transition: var(--transition-smooth);
+    font-size: 14px;
+}
+
+footer li a:hover {
+    color: var(--primary-color) !important;
+    transform: translateX(3px);
+}
+
+/* 🎨 Utility Classes */
+.text-primary {
+    color: var(--primary-color) !important;
+}
+
+.bg-light {
+    background-color: rgba(255, 255, 255, 0.95) !important;
+}
+
+/* 🎵 Accordion (FAQ) */
+.accordion-item {
+    background: rgba(255, 255, 255, 0.95) !important;
+    border: 2px solid rgba(99, 102, 241, 0.2) !important;
+    border-radius: var(--radius-md) !important;
+    color: var(--text-primary) !important;
+    margin-bottom: 15px;
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+}
+
+.accordion-button {
+    background: rgba(99, 102, 241, 0.05) !important;
+    color: var(--text-primary) !important;
+    font-weight: 700;
+    padding: 1.25rem 1.5rem;
+}
+
+.accordion-button:not(.collapsed) {
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(168, 85, 247, 0.15) 100%) !important;
+    color: var(--primary-color) !important;
+    box-shadow: none !important;
+}
+
+.accordion-button::after {
+    filter: none;
+}
+
+.accordion-collapse {
+    border-top: 2px solid rgba(99, 102, 241, 0.2);
+}
+
+.accordion-body {
+    padding: 1.5rem;
+    color: var(--text-secondary);
+}
+
+/* 🖼️ Product Detail Image */
+.product-detail-img {
+    border: 3px solid rgba(99, 102, 241, 0.3);
+    border-radius: var(--radius-lg);
+    background: rgba(255, 255, 255, 0.95);
+    padding: 2rem;
+    box-shadow: var(--shadow-lg);
+}
+
+/* 📝 List Group */
+.list-group-item {
+    background: #ffffff !important;
+    border: 1px solid #e8e8e8 !important;
+    color: var(--text-primary) !important;
+    transition: var(--transition-smooth);
+}
+
+.list-group-item:hover {
+    background: #fafafa !important;
+    border-color: var(--primary-color) !important;
+}
+
+/* 🎯 Container Wrapper */
+.container, .container-fluid {
+    position: relative;
+    z-index: 1;
+}
+
+/* ✨ Floating Animation for Icons */
+@keyframes floatSlow {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+}
+
+.fa-shopping-bag, .fa-heart, .fa-star {
+    animation: floatSlow 3s ease-in-out infinite;
+}
+
+/* 🎨 Price Display */
+.price {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--primary-color);
+}
+
+/* 🌟 Special Effects */
+.glow-on-hover {
+    transition: var(--transition-smooth);
+}
+
+.glow-on-hover:hover {
+    box-shadow: var(--shadow-orange);
+}
+
+/* 📱 Mobile Responsive Adjustments */
+@media (max-width: 768px) {
+    .hero-section h1 {
+        font-size: 2.5rem;
+    }
+    
+    .navbar-brand {
+        font-size: 1.4rem;
+    }
+    
+    .btn {
+        padding: 0.65rem 1.5rem !important;
+        font-size: 0.85rem;
+    }
+}
+
+
+/* 🎨 CUSTOM DROPDOWN MENU STYLING */
+.custom-dropdown {
+    min-width: 280px;
+    padding: 10px 0;
+    border: 1px solid #e8e8e8;
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-lg);
+    background: white;
+    animation: dropdownSlide 0.3s ease-out;
+}
+
+@keyframes dropdownSlide {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.custom-dropdown .dropdown-header {
+    padding: 12px 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-secondary);
+    background: #fafafa;
+    margin-bottom: 5px;
+}
+
+.custom-dropdown .dropdown-header i {
+    margin-right: 8px;
+    font-size: 0.9rem;
+}
+
+.custom-dropdown .dropdown-item {
+    padding: 10px 20px;
+    font-size: 0.95rem;
+    font-weight: 400;
+    color: var(--text-primary);
+    transition: all var(--transition-smooth);
+    border-left: 3px solid transparent;
+}
+
+.custom-dropdown .dropdown-item i {
+    margin-right: 12px;
+    font-size: 1.1rem;
+    width: 20px;
+    text-align: center;
+}
+
+.custom-dropdown .dropdown-item:hover {
+    background: #fff7e6;
+    border-left-color: var(--primary-color);
+}
+
+.custom-dropdown .dropdown-item.text-danger:hover {
+    background: #fff1f0;
+    border-left-color: var(--accent-red);
+    color: #cf1322;
+}
+
+.custom-dropdown .dropdown-divider {
+    margin: 8px 0;
+    border-top: 1px solid #e8e8e8;
+}
+
+/* 🎨 Navbar User Dropdown Toggle */
+.nav-link.dropdown-toggle {
+    padding: 8px 16px;
+    border-radius: var(--radius-sm);
+    transition: all var(--transition-smooth);
+    font-weight: 600;
+}
+
+.nav-link.dropdown-toggle:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateY(-2px);
+}
+
+.nav-link.dropdown-toggle i {
+    font-size: 1.2rem;
+    margin-right: 8px;
+}
+
+/* 🎨 Dropdown Icon Colors */
+.custom-dropdown .text-primary {
+    color: var(--primary-color) !important;
+}
+
+.custom-dropdown .text-warning {
+    color: var(--accent-orange) !important;
+}
+
+.custom-dropdown .text-success {
+    color: var(--accent-green) !important;
+}
+
+.custom-dropdown .text-danger {
+    color: #ef4444 !important;
+}
+
+/* 🎨 Responsive Dropdown */
+@media (max-width: 768px) {
+    .custom-dropdown {
+        min-width: 100%;
+        border-radius: var(--radius-sm);
+    }
+}
+
+
+/* 💰 CURRENCY SELECTOR IN NAVBAR */
+.currency-selector {
+    background: var(--accent-green);
+    color: white !important;
+    padding: 8px 16px !important;
+    border-radius: var(--radius-sm);
+    font-weight: 600;
+    font-size: 0.95rem;
+    box-shadow: 0 2px 4px rgba(82, 196, 26, 0.2);
+    transition: all var(--transition-smooth);
+}
+
+.currency-selector:hover {
+    background: #389e0d;
+    box-shadow: 0 4px 8px rgba(82, 196, 26, 0.3);
+    transform: translateY(-2px);
+}
+
+.currency-selector i {
+    margin-right: 6px;
+    font-size: 1rem;
+}
+
+/* 💰 Currency Dropdown Menu */
+.currency-dropdown {
+    min-width: 300px;
+    max-height: 500px;
+    overflow-y: auto;
+    padding: 10px 0;
+    border: 1px solid #e8e8e8;
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-lg);
+    background: white;
+    animation: dropdownSlide 0.3s ease-out;
+}
+
+.currency-dropdown .dropdown-header {
+    padding: 12px 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-secondary);
+    background: #fafafa;
+    margin-bottom: 5px;
+}
+
+.currency-dropdown .dropdown-header i {
+    margin-right: 8px;
+    font-size: 0.9rem;
+}
+
+.currency-dropdown .currency-item {
+    padding: 10px 20px;
+    font-size: 0.95rem;
+    font-weight: 400;
+    color: var(--text-primary);
+    transition: all var(--transition-smooth);
+    border-left: 3px solid transparent;
+    display: flex;
+    align-items: center;
+}
+
+.currency-dropdown .currency-item:hover {
+    background: #f6ffed;
+    border-left-color: var(--accent-green);
+}
+
+.currency-dropdown .currency-item.active {
+    background: #f6ffed;
+    border-left-color: var(--accent-green);
+    font-weight: 600;
+}
+
+.currency-flag {
+    font-size: 1.5rem;
+    margin-right: 12px;
+}
+
+/* 💰 Responsive Currency Selector */
+@media (max-width: 768px) {
+    .currency-selector {
+        padding: 6px 12px !important;
+        font-size: 0.85rem;
+    }
+    
+    .currency-dropdown {
+        min-width: 100%;
+        max-height: 400px;
+    }
+}
+
+
+/* 🌍 LANGUAGE SELECTOR IN NAVBAR */
+.language-selector {
+    background: var(--accent-blue);
+    color: white !important;
+    padding: 8px 16px !important;
+    border-radius: var(--radius-sm);
+    font-weight: 600;
+    font-size: 0.95rem;
+    box-shadow: 0 2px 4px rgba(24, 144, 255, 0.2);
+    transition: all var(--transition-smooth);
+}
+
+.language-selector:hover {
+    background: #096dd9;
+    box-shadow: 0 4px 8px rgba(24, 144, 255, 0.3);
+    transform: translateY(-2px);
+}
+
+.language-selector i {
+    margin-right: 6px;
+    font-size: 1rem;
+}
+
+/* 🌍 Language Dropdown Menu */
+.language-dropdown {
+    min-width: 280px;
+    max-height: 500px;
+    overflow-y: auto;
+    padding: 10px 0;
+    border: 1px solid #e8e8e8;
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-lg);
+    background: white;
+    animation: dropdownSlide 0.3s ease-out;
+}
+
+.language-dropdown .dropdown-header {
+    padding: 12px 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-secondary);
+    background: #fafafa;
+    margin-bottom: 5px;
+}
+
+.language-dropdown .dropdown-header i {
+    margin-right: 8px;
+    font-size: 0.9rem;
+}
+
+.language-form {
+    margin: 0;
+    padding: 0;
+}
+
+.language-dropdown .language-item {
+    padding: 10px 20px;
+    font-size: 0.95rem;
+    font-weight: 400;
+    color: var(--text-primary);
+    transition: all var(--transition-smooth);
+    border-left: 3px solid transparent;
+    border: none;
+    background: none;
+    width: 100%;
+    text-align: left;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+
+.language-dropdown .language-item:hover {
+    background: #e6f7ff;
+    border-left-color: var(--accent-blue);
+}
+
+.language-dropdown .language-item.active {
+    background: #e6f7ff;
+    border-left-color: var(--accent-blue);
+    font-weight: 600;
+}
+
+.language-flag {
+    font-size: 1.5rem;
+    margin-right: 12px;
+}
+
+/* 🌍 Responsive Language Selector */
+@media (max-width: 768px) {
+    .language-selector {
+        padding: 6px 12px !important;
+        font-size: 0.85rem;
+    }
+    
+    .language-dropdown {
+        min-width: 100%;
+        max-height: 400px;
+    }
+}
+
+
+/* ===== HIDE FLOATING CIRCULAR BUTTONS ===== */
+/* Hide all floating action buttons and circular buttons */
+.djdebug-panel,
+.django-ckeditor-widget,
+button[style*="position: fixed"],
+div[style*="position: fixed"][style*="bottom"][style*="right"],
+.fixed-bottom-right,
+.floating-button,
+.fab-button,
+.help-button,
+.feedback-button,
+.support-button {
+    display: none !important;
+    visibility: hidden !important;
+}
+
+/* Hide circular buttons with high z-index */
+div[style*="z-index: 999"],
+div[style*="z-index: 9999"],
+div[style*="z-index: 99999"],
+button[style*="border-radius: 50%"][style*="position: fixed"],
+a[style*="border-radius: 50%"][style*="position: fixed"] {
+    display: none !important;
+    visibility: hidden !important;
+}
+
+/* Hide bottom-right floating elements */
+body > div[style*="position: fixed"][style*="bottom"][style*="right"],
+body > button[style*="position: fixed"][style*="bottom"][style*="right"],
+body > a[style*="position: fixed"][style*="bottom"][style*="right"] {
+    display: none !important;
+    visibility: hidden !important;
+}
+
+/* Hide common floating button classes */
+[class*="circular"],
+[class*="float"],
+[class*="fab-"],
+[id*="floating"],
+[id*="help-button"],
+[id*="feedback"] {
+    display: none !important;
+    visibility: hidden !important;
+}

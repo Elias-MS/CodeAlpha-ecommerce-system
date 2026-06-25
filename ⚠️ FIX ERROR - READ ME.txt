@@ -1,0 +1,19 @@
+⚠️⚠️⚠️ DATABASE ERROR FIX ⚠️⚠️⚠️
+
+ERROR: no such column: users_complaint.is_urgent
+
+═══════════════════════════════════════════════════
+
+🔧 QUICK FIX - DO THIS NOW:
+
+1. Double-click: FIX_DATABASE_NOW.bat
+
+2. Press Ctrl + F5 in your browser
+
+3. Done! ✅
+
+═══════════════════════════════════════════════════
+
+That's it! Your website will work after this.
+
+For detailed instructions, read: HOW_TO_FIX_ERROR.md

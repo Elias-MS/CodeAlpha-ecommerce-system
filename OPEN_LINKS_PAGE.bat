@@ -1,0 +1,3 @@
+@echo off
+echo Opening links page in your browser...
+start FIX_AND_LINKS.html

@@ -1,0 +1,18 @@
+runtime: python310
+
+env_variables:
+  DJANGO_SETTINGS_MODULE: 'ecommerce.settings'
+  SECRET_KEY: 'your-secret-key-here-change-this'
+  DEBUG: 'False'
+
+handlers:
+- url: /static
+  static_dir: staticfiles/
+
+- url: /media
+  static_dir: media/
+
+- url: /.*
+  script: auto
+
+entrypoint: gunicorn -b :$PORT ecommerce.wsgi:application

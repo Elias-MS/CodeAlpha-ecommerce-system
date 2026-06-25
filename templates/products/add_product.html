@@ -1,0 +1,279 @@
+{% extends 'base.html' %}
+
+{% block title %}Add Product - E-Commerce Store{% endblock %}
+
+{% block content %}
+<style>
+    .form-container {
+        padding: 40px 20px;
+        background: #f8f9fa;
+        min-height: 100vh;
+    }
+    
+    .form-card {
+        background: white;
+        border-radius: 16px;
+        padding: 40px;
+        max-width: 800px;
+        margin: 0 auto;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+    
+    .form-header {
+        text-align: center;
+        margin-bottom: 40px;
+    }
+    
+    .form-title {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #2d3436;
+        margin-bottom: 10px;
+    }
+    
+    .form-subtitle {
+        color: #636e72;
+        font-size: 1.1rem;
+    }
+    
+    .form-group {
+        margin-bottom: 25px;
+    }
+    
+    .form-label {
+        display: block;
+        font-weight: 600;
+        color: #2d3436;
+        margin-bottom: 10px;
+        font-size: 1.05rem;
+    }
+    
+    .form-label .required {
+        color: #ff6b6b;
+    }
+    
+    .form-control {
+        width: 100%;
+        padding: 15px 20px;
+        border: 2px solid #dfe6e9;
+        border-radius: 10px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+    }
+    
+    .form-control:focus {
+        outline: none;
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+    
+    textarea.form-control {
+        min-height: 120px;
+        resize: vertical;
+    }
+    
+    .form-help {
+        font-size: 0.9rem;
+        color: #636e72;
+        margin-top: 5px;
+    }
+    
+    .form-actions {
+        display: flex;
+        gap: 15px;
+        margin-top: 40px;
+    }
+    
+    .btn-submit {
+        flex: 1;
+        padding: 15px;
+        background: linear-gradient(135deg, #00b894 0%, #00cec9 100%);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-size: 1.1rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-submit:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0, 184, 148, 0.4);
+    }
+    
+    .btn-cancel {
+        flex: 1;
+        padding: 15px;
+        background: #dfe6e9;
+        color: #2d3436;
+        border: none;
+        border-radius: 10px;
+        font-size: 1.1rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        text-align: center;
+    }
+    
+    .btn-cancel:hover {
+        background: #b2bec3;
+        color: #2d3436;
+    }
+    
+    .image-preview {
+        margin-top: 15px;
+        text-align: center;
+    }
+    
+    .image-preview img {
+        max-width: 300px;
+        max-height: 300px;
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    
+    .file-input-wrapper {
+        position: relative;
+        overflow: hidden;
+        display: inline-block;
+        width: 100%;
+    }
+    
+    .file-input-wrapper input[type=file] {
+        position: absolute;
+        left: -9999px;
+    }
+    
+    .file-input-label {
+        display: block;
+        padding: 15px 20px;
+        background: #f8f9fa;
+        border: 2px dashed #dfe6e9;
+        border-radius: 10px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    
+    .file-input-label:hover {
+        background: #e9ecef;
+        border-color: #667eea;
+    }
+    
+    .file-input-label i {
+        font-size: 2rem;
+        color: #667eea;
+        margin-bottom: 10px;
+        display: block;
+    }
+</style>
+
+<div class="form-container">
+    <div class="container">
+        <div class="form-card">
+            <div class="form-header">
+                <h1 class="form-title">➕ Add New Product</h1>
+                <p class="form-subtitle">Fill in the details below to add a new product</p>
+            </div>
+            
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                
+                <!-- Product Name -->
+                <div class="form-group">
+                    <label class="form-label">
+                        Product Name <span class="required">*</span>
+                    </label>
+                    <input type="text" name="name" class="form-control" placeholder="e.g., Wireless Bluetooth Headphones" required>
+                    <small class="form-help">Enter a clear, descriptive product name</small>
+                </div>
+                
+                <!-- Description -->
+                <div class="form-group">
+                    <label class="form-label">
+                        Description <span class="required">*</span>
+                    </label>
+                    <textarea name="description" class="form-control" placeholder="Describe your product features, benefits, and specifications..." required></textarea>
+                    <small class="form-help">Provide detailed information about the product</small>
+                </div>
+                
+                <!-- Category -->
+                <div class="form-group">
+                    <label class="form-label">
+                        Category <span class="required">*</span>
+                    </label>
+                    <select name="category" class="form-control" required>
+                        <option value="">-- Select Category --</option>
+                        {% for category in categories %}
+                        <option value="{{ category.id }}">{{ category.name }}</option>
+                        {% endfor %}
+                    </select>
+                    <small class="form-help">Choose the most appropriate category</small>
+                </div>
+                
+                <!-- Price -->
+                <div class="form-group">
+                    <label class="form-label">
+                        Price ($) <span class="required">*</span>
+                    </label>
+                    <input type="number" name="price" class="form-control" placeholder="29.99" step="0.01" min="0" required>
+                    <small class="form-help">Enter the product price in dollars</small>
+                </div>
+                
+                <!-- Stock -->
+                <div class="form-group">
+                    <label class="form-label">
+                        Stock Quantity <span class="required">*</span>
+                    </label>
+                    <input type="number" name="stock" class="form-control" placeholder="100" min="0" required>
+                    <small class="form-help">How many units are available? (Set to 0 for out of stock)</small>
+                </div>
+                
+                <!-- Image -->
+                <div class="form-group">
+                    <label class="form-label">
+                        Product Image <span class="required">*</span>
+                    </label>
+                    <div class="file-input-wrapper">
+                        <input type="file" name="image" id="imageInput" accept="image/*" required onchange="previewImage(event)">
+                        <label for="imageInput" class="file-input-label">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <div>Click to upload product image</div>
+                            <small style="color: #636e72;">JPG, PNG, or GIF (Max 5MB)</small>
+                        </label>
+                    </div>
+                    <div class="image-preview" id="imagePreview" style="display: none;">
+                        <img id="previewImg" src="" alt="Preview">
+                    </div>
+                </div>
+                
+                <!-- Form Actions -->
+                <div class="form-actions">
+                    <button type="submit" class="btn-submit">
+                        <i class="fas fa-check"></i> Add Product
+                    </button>
+                    <a href="{% url 'products:manage_products' %}" class="btn-cancel">
+                        <i class="fas fa-times"></i> Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    function previewImage(event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('previewImg').src = e.target.result;
+                document.getElementById('imagePreview').style.display = 'block';
+            }
+            reader.readAsDataURL(file);
+        }
+    }
+</script>
+{% endblock %}
