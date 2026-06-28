@@ -64,3 +64,9 @@ node_modules/
 # Migrations (optional - uncomment if you don't want to track migrations)
 # */migrations/*.py
 # !*/migrations/__init__.py
+
+# Temporary documentation
+docs/temp/
+
+# Kiro IDE
+.kiro/
