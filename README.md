@@ -10,7 +10,7 @@
 [![SQLite](https://img.shields.io/badge/SQLite-07405E?style=for-the-badge&logo=sqlite&logoColor=white)](https://www.sqlite.org/)
 [![License](https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge)](LICENSE)
 
-**[Live Demo](#) | [Documentation](API_DOCUMENTATION.md) | [Report Bug](https://github.com/Elias-MS/E-commerance-system/issues) | [Request Feature](https://github.com/Elias-MS/E-commerance-system/issues)**
+**[Live Demo](#) | [Documentation](API_DOCUMENTATION.md) | [Report Bug](https://github.com/Elias-MS/CodeAlpha-ecommerce-system/issues) | [Request Feature](https://github.com/Elias-MS/CodeAlpha-ecommerce-system/issues)**
 
 </div>
 
@@ -140,8 +140,8 @@ Follow these steps to get your development environment running:
 #### 1️⃣ Clone the Repository
 
 ```bash
-git clone https://github.com/Elias-MS/E-commerance-system.git
-cd E-commerance-system
+git clone https://github.com/Elias-MS/CodeAlpha-ecommerce-system.git
+cd CodeAlpha-ecommerce-system
 ```
 
 #### 2️⃣ Create Virtual Environment
@@ -189,7 +189,7 @@ python manage.py runserver
 ## 📁 Project Structure
 
 ```
-E-commerance-system/
+CodeAlpha-ecommerce-system/
 │
 ├── 📂 ecommerce/                      # Main Project Configuration
 │   ├── __init__.py
@@ -621,11 +621,11 @@ Special thanks to:
 
 ### Need Help?
 
-[![GitHub Issues](https://img.shields.io/github/issues/Elias-MS/E-commerance-system?style=for-the-badge)](https://github.com/Elias-MS/E-commerance-system/issues)
+[![GitHub Issues](https://img.shields.io/github/issues/Elias-MS/CodeAlpha-ecommerce-system?style=for-the-badge)](https://github.com/Elias-MS/CodeAlpha-ecommerce-system/issues)
 [![Documentation](https://img.shields.io/badge/Documentation-Read-blue?style=for-the-badge)](API_DOCUMENTATION.md)
 
-**Found a bug?** [Report it](https://github.com/Elias-MS/E-commerance-system/issues)  
-**Have a question?** [Ask in Discussions](https://github.com/Elias-MS/E-commerance-system/discussions)  
+**Found a bug?** [Report it](https://github.com/Elias-MS/CodeAlpha-ecommerce-system/issues)  
+**Have a question?** [Ask in Discussions](https://github.com/Elias-MS/CodeAlpha-ecommerce-system/discussions)  
 **Want to contribute?** [See Contributing](#-contributing)
 
 </div>
@@ -638,15 +638,15 @@ Special thanks to:
 
 If you found this project helpful, please give it a ⭐!
 
-[![Star this repo](https://img.shields.io/github/stars/Elias-MS/E-commerance-system?style=social)](https://github.com/Elias-MS/E-commerance-system)
-[![Fork this repo](https://img.shields.io/github/forks/Elias-MS/E-commerance-system?style=social)](https://github.com/Elias-MS/E-commerance-system/fork)
-[![Watch this repo](https://img.shields.io/github/watchers/Elias-MS/E-commerance-system?style=social)](https://github.com/Elias-MS/E-commerance-system)
+[![Star this repo](https://img.shields.io/github/stars/Elias-MS/CodeAlpha-ecommerce-system?style=social)](https://github.com/Elias-MS/CodeAlpha-ecommerce-system)
+[![Fork this repo](https://img.shields.io/github/forks/Elias-MS/CodeAlpha-ecommerce-system?style=social)](https://github.com/Elias-MS/CodeAlpha-ecommerce-system/fork)
+[![Watch this repo](https://img.shields.io/github/watchers/Elias-MS/CodeAlpha-ecommerce-system?style=social)](https://github.com/Elias-MS/CodeAlpha-ecommerce-system)
 
 ### Share This Project
 
 Share this project with your friends and colleagues!
 
-[![Twitter](https://img.shields.io/twitter/url?style=social&url=https%3A%2F%2Fgithub.com%2FElias-MS%2FE-commerance-system)](https://twitter.com/intent/tweet?text=Check%20out%20this%20awesome%20Django%20E-Commerce%20project!&url=https://github.com/Elias-MS/E-commerance-system)
+[![Twitter](https://img.shields.io/twitter/url?style=social&url=https%3A%2F%2Fgithub.com%2FElias-MS%2FCodeAlpha-ecommerce-system)](https://twitter.com/intent/tweet?text=Check%20out%20this%20awesome%20Django%20E-Commerce%20project!&url=https://github.com/Elias-MS/CodeAlpha-ecommerce-system)
 
 </div>
 
